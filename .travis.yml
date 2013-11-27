@@ -1,0 +1,7 @@
+install: 
+
+language: cpp
+
+compiler: gcc
+
+script : make

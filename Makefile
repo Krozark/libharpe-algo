@@ -1,5 +1,5 @@
 export CC = g++
-INCPATH = 
+INCPATH = -I$(CURDIR)/include -I$(CURDIR)/src 
 LIBS =
 #-lpthread 
 #-lmysqlcppconn 
@@ -13,7 +13,7 @@ OBJ = $(SRC:.cpp=.o) $(SRC:*.cpp=.o)
 
 SUBDIRS = src obj
 
-export EXEC = harpe-algo
+export EXEC = Harpe-algo
 
 
 CLEANDIRS = $(SUBDIRS:%=clean-%)
