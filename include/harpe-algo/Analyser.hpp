@@ -6,6 +6,9 @@ namespace harpe
     class Analyser
     {
         public:
+            Analyser(const Analyser&) = delete;
+            Analyser& operator=(const Analyser&) = delete;
+
             Analyser();
 
         protected:

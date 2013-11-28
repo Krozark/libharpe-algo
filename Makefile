@@ -1,5 +1,5 @@
 export CC = g++
-INCPATH = -I$(CURDIR)/include -I$(CURDIR)/src 
+INCPATH = -I$(CURDIR)/include 
 LIBS =
 #-lpthread 
 #-lmysqlcppconn 
