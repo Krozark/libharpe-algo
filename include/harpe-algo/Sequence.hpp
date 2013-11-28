@@ -21,6 +21,10 @@ namespace harpe
 
             struct Header {
                 double score;
+                /*struct _holds {
+                    std::shared_ptr<std::list<list_arg> > link;
+                    double to_find;
+                } holds [Parser::peptide::SIZE];*/
             } header;
 
     };
