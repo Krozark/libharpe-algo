@@ -8,6 +8,9 @@
 
 namespace harpe
 {
+    /**
+     * \brief A class to manage sequence tokens. They can be use during the analyse of the Spectrum
+     */
     class SequenceToken
     {
         public:
