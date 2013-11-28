@@ -59,6 +59,9 @@ namespace harpe
              */
             void __print__(std::ostream& stream)const;
 
+            /**
+             * \brief Possible type for token. Default is UNKNOW
+             */
             enum Type {UNKNOW=-1, ///< Inconnus / ERREUR
                 AA_TOKEN=0, ///< acide aminé
                 //AA_HOLD_TOKEN, ///< acide aminé théorique
