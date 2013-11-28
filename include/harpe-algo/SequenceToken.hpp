@@ -48,9 +48,15 @@ namespace harpe
              * \param peak Peak where the AA is find
              **/
             SequenceToken(const int i,const double e,SequenceToken* peak); //aa
-
+    
+            /**
+             * \brief Destructor
+             */
             ~SequenceToken();
 
+            /**
+             * \brief Debug print. Print all the data (type, and related)
+             */
             void __print__(std::ostream& stream)const;
 
             enum Type {UNKNOW=-1, ///< Inconnus / ERREUR
@@ -61,8 +67,11 @@ namespace harpe
 
         private:
 
-            Type type;
+            Type type;///< type of the current token
 
+            /**
+             * Store datas for specifique types
+             */
             union {
                 struct  {
                     int index;
