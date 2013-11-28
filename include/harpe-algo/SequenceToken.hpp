@@ -17,7 +17,14 @@ namespace harpe
              */
             SequenceToken();
             
+           /**
+            * \brief Copy constructor
+            */ 
             SequenceToken(const SequenceToken&);
+
+            /**
+             * \brief Same as copy constructor
+             */
             SequenceToken& operator=(const SequenceToken&);
 
             /**
