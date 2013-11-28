@@ -1,6 +1,7 @@
 #include <harpe-algo/Analyser.hpp>
 
 #include <mgf/Analyse.hpp>
+#include <mgf/Spectrum.hpp>
 
 namespace harpe
 {
@@ -11,9 +12,13 @@ namespace harpe
 
     int Analyser::analyse()
     {
-        mgf::Analyse a = driver.parse();
+        mgf::Analyse analyse = driver.parse();
         if (driver.isValid())
         {
+            auto spectrums(analyse.getSpectrums());
+            for (mgf::Spectrum* spectrum : spectrums)
+            {
+            }
         }
     }
 }
