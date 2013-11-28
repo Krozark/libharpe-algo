@@ -11,13 +11,14 @@ namespace harpe
     class SequenceToken
     {
         public:
-            SequenceToken(const SequenceToken&) = delete;
-            SequenceToken& operator=(const SequenceToken&) = delete;
 
             /**
              * \brief Constructor for containers
              */
             SequenceToken();
+            
+            SequenceToken(const SequenceToken&);
+            SequenceToken& operator=(const SequenceToken&);
 
             /**
              * \brief Move constructor
@@ -62,10 +63,11 @@ namespace harpe
                     SequenceToken* pt_data;
                 } aa_token; ///< AA_TOKEN;
 
-                struct{
+                /*struct{
                     double error;
                     std::vector<int> aa_index;
                 } aa_hold_token; ///<AA_HOLD_TOKEN;
+                */
 
                 struct {
                     int index;

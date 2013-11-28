@@ -9,8 +9,55 @@ namespace harpe
     {
     }
 
+    SequenceToken::SequenceToken(const SequenceToken& other) : type(other.type)
+    {
+        switch(type)
+        {
+            case Type::AA_TOKEN:
+                aa_token = other.aa_token;
+                break;
+
+            case Type::PEAK_TOKEN:
+                peak_token = other.peak_token;
+                break;
+
+            default : break;
+        }
+    }
+
+    SequenceToken& SequenceToken::operator=(const SequenceToken& other)
+    {
+        type = other.type;
+        switch(type)
+        {
+            case Type::AA_TOKEN:
+                aa_token = other.aa_token;
+                break;
+
+            case Type::PEAK_TOKEN:
+                peak_token = other.peak_token;
+                break;
+
+            default : break;
+        }
+    }
+
     SequenceToken::SequenceToken(SequenceToken&& tmp)
     {
+        std::swap(type,tmp.type);
+
+        switch(type)
+        {
+            case Type::AA_TOKEN:
+                std::swap(aa_token,tmp.aa_token);
+                break;
+
+            case Type::PEAK_TOKEN:
+                std::swap(peak_token,tmp.peak_token);
+                break;
+
+            default : break;
+        }
     }
 
     SequenceToken::SequenceToken(const int index,mgf::Peak* peak) //peak
