@@ -33,11 +33,14 @@ namespace harpe
             /**
              * \brief analyse all the MS/MS spectrum in the parsed input, and try to build the Sequence
              */
-            std::list<harpe::Sequence> analyse(mgf::Spectrum& s,int debut=-1);
+            static std::list<harpe::Sequence> analyse(const mgf::Spectrum& s,int debut=-1);
 
+            typedef std::list<harpe::SequenceToken*> pile_tokens_ptr;
         protected:
 
-            const std::vector<int> get_index_max_intensitee_vector(mgf::Spectrum& spectrum,const int nb)const;
+            static const std::vector<int> get_index_max_intensitee_vector(const mgf::Spectrum& spectrum,const int nb);
+
+            enum Sens{LEFT=-1,STOP=0,RIGHT=1};
             
 
         private:
