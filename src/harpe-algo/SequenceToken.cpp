@@ -74,7 +74,10 @@ namespace harpe
         aa_token.index = i;
         aa_token.pt_data = peak;
     }
-
+    
+    SequenceToken::~SequenceToken()
+    {
+    }
 
     void SequenceToken::__print__(std::ostream& stream)const
     {
