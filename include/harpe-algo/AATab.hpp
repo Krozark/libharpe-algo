@@ -7,6 +7,7 @@ namespace harpe
 {
     namespace db
     {
+        ///\todo AA
         class AA ///\todo Make it
         {
             public:
@@ -30,6 +31,7 @@ namespace harpe
 
 namespace harpe
 {
+    ///\todo AATab
     class AATab
     {
         public:
