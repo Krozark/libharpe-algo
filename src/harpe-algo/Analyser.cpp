@@ -111,6 +111,12 @@ namespace harpe
             }
         }
         end_loop:
+        res.shrink_to_fit();
         return res;
+    }
+    std::vector<SequenceToken> Analyser::get_near(const std::vector<mgf::Peak*>& peak_list,const int index, const Sens inc)
+    {
+        std::vector<SequenceToken> res;
+
     }
 }
