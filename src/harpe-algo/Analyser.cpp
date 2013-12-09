@@ -32,6 +32,8 @@ namespace harpe
 
     std::list<harpe::Sequence> Analyser::analyse(const mgf::Spectrum& spectrum,int debut)
     {
+        std::list<Sequence> finds;// results
+
         const std::vector<int> peaks_index = debut>0?std::vector<int>(debut):get_index_max_intensitee_vector(spectrum,HARPE_ALGO_DEFAULT_START_PEAKS_NB);
 
         const unsigned int index_size=peaks_index.size();
@@ -133,7 +135,11 @@ namespace harpe
             std::cout<<"-- LEFT --"<<std::endl;
             __print__(results_left,std::cout);
 
+            merge_solution(finds,results_left,results_right);
         }
+
+        std::cout<<"-- FINDS --"<<std::endl;
+        __print__(finds,std::cout);
 
         std::list<harpe::Sequence> res;
         return res;
@@ -360,9 +366,10 @@ remove_1_peak_left:
                 current_peak_index = token->peak_token.index;
             }
         }
-end: 
+    end: 
         return current_peak_index;
     }
+
 
     void Analyser::save_stack(const pile_tokens_ptr& search,const mgf::Spectrum& spectrum,std::list<Sequence>& res)
     {
@@ -427,6 +434,141 @@ end:
         }
     }
 
+    void Analyser::merge_solution(std::list<Sequence>& finds,const std::list<Sequence>& left_part,const std::list<Sequence>& right_part)
+    {
+
+        auto l_end = left_part.end();
+        auto r_end = right_part.end();
+        auto l_begin = left_part.begin();
+        auto r_begin = right_part.begin();
+
+        /*#ifndef APPRENTISSAGE
+        double tmp_values[VALUES_SIZE];
+        #endif
+        */
+
+        for(auto i=l_begin; i != l_end; ++i)
+        {
+            if(i->sequence.size() > 1) //il y a au moins 1 AA
+            {
+                for(auto j=r_begin; j!= r_end; ++j)
+                {
+                    if(j->sequence.size() > 1) //il y a au moins 1 AA
+                    {
+                        finds.emplace_back(*i);
+                        Sequence& new_seq=finds.back();
+
+                        //stack_token* tmp_head = new stack_token(*tmp[0]); //copie
+                        //tokens_ptr.emplace_back(tmp_head);
+
+                        //tmp[0] = tmp_head;
+                        //stack_token& i_0 = *tmp[0];
+                        //stack_token& j_0 = *(*j)[0];
+                        //fusion des header
+                        //i_0.header_token.holds[Parser::peptide::FIN_H2O].link = j_0.header_token.holds[Parser::peptide::FIN_H2O].link;
+                        //i_0.header_token.holds[Parser::peptide::FIN_H2O].to_find = j_0.header_token.holds[Parser::peptide::FIN_H2O].to_find;
+
+                        //i_0.header_token.holds[Parser::peptide::FIN].link = j_0.header_token.holds[Parser::peptide::FIN].link;
+                        //i_0.header_token.holds[Parser::peptide::FIN].to_find = j_0.header_token.holds[Parser::peptide::FIN].to_find;
+                        //ajout du noyeau (header-peak(en commun)-[AA -peak]* )
+                        copy((*j).sequence.begin()+1,(*j).sequence.end(),back_inserter(new_seq.sequence)); 
+                        //ajout du nouveau
+                        
+                        //TODO
+                        /*#if DEBUG & DEBUG_STATS 
+                        ++calc_stats[k-1][NB_SOL_FIND];
+                        #endif
+                        */
+
+                        //SCORE
+                        /*#ifndef APPRENTISSAGE
+                        calc_values(tmp_values,tmp,pep);
+                        tmp[0]->header_token.score = calc_score(tmp_values);
+                        #endif
+                        */
+
+                        //print_AA(tmp);
+
+                        //finds.emplace_back(move(tmp));
+                        ///////////////////////////////////////////
+
+                        /*#ifndef APPRENTISSAGE
+                        if(finds_max_size > 0 and ++_size > finds_max_size*5)
+                        {
+                            const auto& _begin = finds.begin();
+                            partial_sort(_begin,_begin+finds_max_size,finds.end(),solution_gt);
+                            finds.resize(finds_max_size);
+                            _size = finds_max_size;
+                        }
+                        #endif
+                        */
+                        /*
+                        v_tokens_ptr tmp= (*i);
+                        stack_token* tmp_head = new stack_token(*tmp[0]);
+                        stack_token& i_0 = *tmp_head;
+                        stack_token& j_0 = *(*j)[0];
+                        //fusion des header
+                        i_0.header_token.holds[Parser::peptide::FIN_H2O].link = j_0.header_token.holds[Parser::peptide::FIN_H2O].link;
+                        i_0.header_token.holds[Parser::peptide::FIN_H2O].to_find = j_0.header_token.holds[Parser::peptide::FIN_H2O].to_find;
+
+                        i_0.header_token.holds[Parser::peptide::FIN].link = j_0.header_token.holds[Parser::peptide::FIN].link;
+                        i_0.header_token.holds[Parser::peptide::FIN].to_find = j_0.header_token.holds[Parser::peptide::FIN].to_find;
+                        //ajout du noyeau (header-peak(en commun)-[AA -peak]* )
+                        copy((*j).begin()+2,(*j).end(),back_inserter(tmp)); 
+                        //ajout du nouveau
+                        
+                        //TODO
+                        #if DEBUG & DEBUG_STATS 
+                        ++calc_stats[k-1][NB_SOL_FIND];
+                        #endif
+
+                        //SCORE
+                        #ifndef APPRENTISSAGE
+                        calc_values(tmp_values,tmp,pep);
+                        i_0.header_token.score = calc_score(tmp_values);
+                        #endif
+
+                        if(_size < finds_max_size or i_0.header_token.score > finds[_size-1][0]->header_token.score)
+                        {
+                            tokens_ptr.emplace_back(tmp_head);//save to be delete at the end
+                            finds.emplace_back(move(tmp));
+                            ++_size;
+                        }
+
+                        #ifndef APPRENTISSAGE
+                        if(finds_max_size > 0 and _size > finds_max_size*5)
+                        {
+                            const auto& _begin = finds.begin();
+                            partial_sort(_begin,_begin+finds_max_size,finds.end(),solution_gt);
+                            finds.resize(finds_max_size);
+                            _size = finds_max_size;
+                        }
+                        #endif
+                        */
+                    }
+                }
+            }
+        }
+        
+
+        #ifndef APPRENTISSAGE
+        const auto& _begin = finds.begin();
+
+        /*int _size = finds.size();
+        if(_size<finds_max_size)
+            sort(_begin,finds.end(),solution_gt);
+        else
+            partial_sort(_begin,_begin+finds_max_size,finds.end(),solution_gt);
+        */
+
+        /*if(_size > finds_max_size)
+        {
+            finds.resize(finds_max_size);
+        }*/
+        #endif
+    };
+
+
     void Analyser::__print__(const std::vector<SequenceToken*>& tokens,std::ostream& stream)
     {
         for(SequenceToken* token : tokens)
@@ -434,6 +576,8 @@ end:
             token->__print__(stream);
         }
     }
+
+
     void Analyser::__print__(const std::list<Sequence>& sequences,std::ostream& stream)
     {
         for(const Sequence& seq : sequences)
@@ -442,6 +586,4 @@ end:
             stream<<std::endl;
         }
     }
-
-    
 }
