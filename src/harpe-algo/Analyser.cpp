@@ -53,6 +53,38 @@ namespace harpe
             {
                 mgf::Peak* current_peak = peaks[current_peak_index];
                 current_peak->setUsed(true);
+
+                std::vector<SequenceToken> near=get_near(peaks,current_peak_index,sens);
+                {
+                    const int size_near = near.size();
+                    if(size_near==0)
+                    {
+                        current_peak_index = depiler(search,sens);
+
+                        if(current_peak_index == -1)
+                        {
+                            switch(sens)
+                            {
+                                case Sens::RIGHT : 
+                                {
+                                    sens = Sens::LEFT;
+                                    current_peak_index = search.front()->peak_token.index;
+                                }break;
+                                case Sens::LEFT :
+                                {
+                                    sens = Sens::STOP;
+                                }break;
+                                default:
+                                    HARPE_ALGO_ERROR("Unknow sens variable value")
+                                break;
+                                
+                            }
+                        }
+                    }
+                    else
+                    {
+                    }
+                }
             }
 
         }
@@ -93,6 +125,7 @@ namespace harpe
                 res_peaks.push_back(peaks[i]);
 
         }
+
         const std::vector<mgf::Peak*>& peaks = spectrum.getPeaks();
         const unsigned int size = peaks.size();
         int finds=0;
@@ -114,9 +147,117 @@ namespace harpe
         res.shrink_to_fit();
         return res;
     }
+
     std::vector<SequenceToken> Analyser::get_near(const std::vector<mgf::Peak*>& peak_list,const int index, const Sens inc)
     {
+        ///\todo
         std::vector<SequenceToken> res;
+        return res;
+    }
 
+    int Analyser::depiler(Analyser::pile_tokens_ptr& search,const int sens)
+    {
+        int current_peak_index = -1;
+
+        register int nb;
+        SequenceToken* token;
+
+        if (sens == Sens::RIGHT) // depiler depuis le back
+        {
+            Analyser::pile_tokens_ptr::reverse_iterator i;
+
+remove_1_peak_right:
+
+            nb=0;
+            i= search.rbegin();
+            ++i;
+            {
+                auto end = search.rend();
+                while(i!=end && (*i)->type != SequenceToken::Type::PEAK_TOKEN && nb < 2)
+                {
+                    ++i;
+                    ++nb;
+                }
+            }
+            if (nb==0)
+            {//la pile est vide
+                current_peak_index = -1;
+                goto end;
+            }
+            token = search.back();
+
+            search.pop_back(); // delete Peak
+            token->peak_token.pt_data->setUsed(false); //on ne l'utilise plus
+
+            search.pop_back(); // delete AA
+
+            if (nb ==1)
+            {
+                nb=0;
+                goto remove_1_peak_right;
+            }
+            else
+            {
+                token = search.back()->get_peak_stack_NULL();
+                search.emplace_back(token);
+                current_peak_index = token->peak_token.index;
+            }
+        }
+        else if (sens == Sens::LEFT) // depiler depuis le fron
+        {
+            Analyser::pile_tokens_ptr::iterator i;
+
+remove_1_peak_left:
+
+            nb=0;
+            token = search.front();
+            token->peak_token.pt_data->setUsed(false); //on ne l'utilise plus
+
+            search.pop_front(); // delete Peak
+
+            /// trouver le prochain peak
+            i= search.begin();
+            {
+                auto end = search.end();
+                while(i!= end && (*i)->type != SequenceToken::Type::PEAK_TOKEN)
+                {
+                    ++i;
+                    ++nb;
+                }
+            }
+
+            if (nb==0)
+            {//la pile est vide
+                current_peak_index = -1;
+                goto end;
+            }
+
+            //revenir au AA courament utilisé
+            --i;
+
+            i=search.erase(i);//delete le AA qui était utilisé
+
+            //il n'y avait que le AA qui était pris en compt
+            //on le suprime
+            if (nb==1)
+            {
+                nb=0;
+                //on recommence
+                goto remove_1_peak_left;
+            }
+            // si il y avait d'autres solutions
+            else
+            {
+                //on prend le AA juste avant
+                --i;
+                //on récupère son peak
+                token = (*i)->get_peak_stack_NULL();
+                //on l'ajoute
+                search.push_front(token);
+                current_peak_index = token->peak_token.index;
+            }
+        }
+end: 
+        return current_peak_index;
     }
 }

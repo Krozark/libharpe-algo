@@ -42,6 +42,9 @@ namespace harpe
             static const std::vector<int> get_index_max_intensitee_vector(const mgf::Spectrum& spectrum,const int nb);
             static std::vector<SequenceToken> get_near(const std::vector<mgf::Peak*>& peak_list,const int index, const Sens inc);
 
+            static int depiler(pile_tokens_ptr& search,const int sens);
+            
+
 
         private:
             mgf::Driver driver;

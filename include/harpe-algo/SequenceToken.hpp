@@ -8,6 +8,7 @@
 
 namespace harpe
 {
+    class Analyser;
     /**
      * \brief A class to manage sequence tokens. They can be use during the analyse of the Spectrum
      */
@@ -72,6 +73,7 @@ namespace harpe
             };
 
         private:
+            friend class Analyser;
 
             Type type;///< type of the current token
 
@@ -97,6 +99,13 @@ namespace harpe
                 } peak_token; ///< PEAK_TOKEN;
 
             };
+
+            inline SequenceToken* get_peak_stack_NULL() {
+                SequenceToken* res = aa_token.pt_data;
+                aa_token.pt_data=NULL;
+                return res;
+            };
+
     };
 }
 #endif
