@@ -9,6 +9,7 @@
 namespace harpe
 {
     class Analyser;
+    class SequenceToken;
     /**
      * \brief A class to manage sequence tokens. They can be use during the analyse of the Spectrum
      */
@@ -74,6 +75,7 @@ namespace harpe
 
         private:
             friend class Analyser;
+            friend class Sequence;
 
             Type type;///< type of the current token
 

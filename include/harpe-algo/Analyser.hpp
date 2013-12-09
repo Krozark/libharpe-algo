@@ -36,6 +36,7 @@ namespace harpe
             static std::list<harpe::Sequence> analyse(const mgf::Spectrum& s,int debut=-1);
 
             typedef std::list<harpe::SequenceToken*> pile_tokens_ptr;
+
         protected:
             enum Sens{LEFT=-1,STOP=0,RIGHT=1};
 
@@ -45,10 +46,13 @@ namespace harpe
             static int pop_stack(pile_tokens_ptr& search,const int sens);
 
             static void save_stack(const pile_tokens_ptr& search,const mgf::Spectrum& spectrum,std::list<Sequence>& res);
-            
-            
 
 
+
+            static void __print__(const std::vector<SequenceToken*>&,std::ostream& stream);
+            static void __print__(const std::list<Sequence>&,std::ostream& stream);
+            
+            
         private:
             mgf::Driver driver;
     };

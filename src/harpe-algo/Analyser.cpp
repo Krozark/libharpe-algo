@@ -57,78 +57,81 @@ namespace harpe
                 current_peak->setUsed(true);
 
                 std::vector<SequenceToken*> near=get_near(peaks,current_peak_index,sens,tokens_ptr);
+                const int size_near = near.size();
+                if(size_near<=0)
                 {
-                    const int size_near = near.size();
-                    if(size_near<=0)
-                    {
-                        current_peak_index = pop_stack(search,sens);
+                    current_peak_index = pop_stack(search,sens);
 
-                        if(current_peak_index == -1)
-                        {
-                            switch(sens)
-                            {
-                                case Sens::RIGHT : 
-                                {
-                                    sens = Sens::LEFT;
-                                    current_peak_index = search.front()->peak_token.index;
-                                }break;
-                                case Sens::LEFT :
-                                {
-                                    sens = Sens::STOP;
-                                }break;
-                                default:
-                                    HARPE_ALGO_ERROR("Unknow sens variable value")
-                                break;
-                                
-                            }
-                        }
-                    }
-                    else
+                    if(current_peak_index == -1)
                     {
                         switch(sens)
                         {
                             case Sens::RIGHT : 
                             {
-                                for (int i=0;i<size_near-1;++i)
-                                {
-                                    search.emplace_back(near[i]);
-                                }
-
-                                auto& tmp_find_last = *near[size_near-1];
-                                SequenceToken* current_stack_peak = tmp_find_last.get_peak_stack_NULL();
-
-                                current_peak_index = (current_stack_peak->peak_token.index);
-                                search.emplace_back(&tmp_find_last); //AA
-                                search.emplace_back(current_stack_peak); //PEAK
-
-                                save_stack(search,spectrum,results_right);
+                                sens = Sens::LEFT;
+                                current_peak_index = search.front()->peak_token.index;
                             }break;
                             case Sens::LEFT :
                             {
-                                auto& tmp_find_last = *near[size_near-1];
-
-                                SequenceToken* current_stack_peak = tmp_find_last.get_peak_stack_NULL();
-
-                                current_peak_index = (current_stack_peak->peak_token.index);
-                                search.emplace_front(&tmp_find_last); //AA
-
-                                for (int i=size_near-2;i>=0;--i)
-                                {
-                                    search.emplace_front(near[i]);
-                                }
-
-                                search.emplace_front(current_stack_peak); //PEAK
-
-                                save_stack(search,spectrum,results_left);
+                                sens = Sens::STOP;
                             }break;
                             default:
                                 HARPE_ALGO_ERROR("Unknow sens variable value")
-                                    break;
-
+                            break;
+                            
                         }
                     }
                 }
+                else
+                {
+                    switch(sens)
+                    {
+                        case Sens::RIGHT : 
+                        {
+                            for (int i=0;i<size_near-1;++i)
+                            {
+                                search.emplace_back(near[i]);
+                            }
+
+                            auto& tmp_find_last = *near[size_near-1];
+                            SequenceToken* current_stack_peak = tmp_find_last.get_peak_stack_NULL();
+
+                            current_peak_index = (current_stack_peak->peak_token.index);
+                            search.emplace_back(&tmp_find_last); //AA
+                            search.emplace_back(current_stack_peak); //PEAK
+
+                            save_stack(search,spectrum,results_right);
+                        }break;
+                        case Sens::LEFT :
+                        {
+                            auto& tmp_find_last = *near[size_near-1];
+
+                            SequenceToken* current_stack_peak = tmp_find_last.get_peak_stack_NULL();
+
+                            current_peak_index = (current_stack_peak->peak_token.index);
+                            search.emplace_front(&tmp_find_last); //AA
+
+                            for (int i=size_near-2;i>=0;--i)
+                            {
+                                search.emplace_front(near[i]);
+                            }
+
+                            search.emplace_front(current_stack_peak); //PEAK
+
+                            save_stack(search,spectrum,results_left);
+                        }break;
+                        default:
+                            HARPE_ALGO_ERROR("Unknow sens variable value")
+                                break;
+
+                    }
+                }
             }
+
+            std::cout<<"-- RIGHT --"<<std::endl;
+            __print__(results_right,std::cout);
+            std::cout<<"-- LEFT --"<<std::endl;
+            __print__(results_left,std::cout);
 
         }
 
@@ -200,6 +203,7 @@ namespace harpe
         const unsigned int size_aa = Context::aa_tab.size();
         const double initial_masse = peak_list[index]->getMasse();
         const static double max_masse = Context::aa_tab.getMax();
+
 
         if (sens >= 0) //++i Sens::RIGHT
         {
@@ -422,4 +426,22 @@ end:
             --i;
         }
     }
+
+    void Analyser::__print__(const std::vector<SequenceToken*>& tokens,std::ostream& stream)
+    {
+        for(SequenceToken* token : tokens)
+        {
+            token->__print__(stream);
+        }
+    }
+    void Analyser::__print__(const std::list<Sequence>& sequences,std::ostream& stream)
+    {
+        for(const Sequence& seq : sequences)
+        {
+            seq.__print_AA__(stream);
+            stream<<std::endl;
+        }
+    }
+
+    
 }

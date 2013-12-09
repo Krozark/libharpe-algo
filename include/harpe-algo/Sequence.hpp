@@ -14,6 +14,20 @@ namespace harpe
             Sequence& operator=(const Sequence&) = default;
 
             Sequence();
+            
+            /**
+             * \brief Debug print. Print all the data (type, and related)
+             */
+            void __print__(std::ostream& stream)const;
+
+            /**
+             * \brief Permet d'afficher la séquence en AA de la proposition
+             *
+             * \param v la séquence
+             * \param sens Sens de lecture
+             * \param p affiche les "?" et les masse
+             **/
+            void __print_AA__(std::ostream& stream)const;
 
         protected:
 

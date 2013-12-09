@@ -3,7 +3,7 @@ INCPATH = -I$(CURDIR)/include
 LIBS = -lmgf
 #-lpthread 
 #-lmysqlcppconn 
-export DEFINES = 
+export DEFINES = -DCOLORS 
 export FLAGS = -g -std=c++0x $(INCPATH) $(LIBS) $(DEFINES)
 export TOP = $(CURDIR)
 export OBJ_DIR = $(TOP)/obj

@@ -48,8 +48,8 @@ namespace harpe
 
             inline unsigned int size()const{return AAs.size();}
 
-            inline double getMax()const{return max_masse;}
-            inline double getMin()const{return min_masse;}
+            inline double getMax()const{return max_mass;}
+            inline double getMin()const{return min_mass;}
 
             void __print__(std::ostream& stream)const;
 
@@ -58,8 +58,8 @@ namespace harpe
         private:
             std::vector<harpe::db::AA> AAs;
 
-            double max_masse,
-                   min_masse;
+            double max_mass,
+                   min_mass;
     };
 }
 #endif

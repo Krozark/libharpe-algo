@@ -33,6 +33,9 @@ namespace harpe
     void AATab::sort()
     {
         std::sort(AAs.begin(),AAs.end());
+
+        min_mass = AAs.front().getMasse();
+        max_mass = AAs.back().getMasse();
     }
 
 
