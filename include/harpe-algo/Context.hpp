@@ -13,6 +13,7 @@ namespace harpe
             Context& operator=(const Context&) = delete;
             
             static AATab aa_tab;
+            static double error;
 
 
         protected:

@@ -6,18 +6,21 @@
 
 namespace harpe
 {
+    class Analyser;
     class Sequence
     {
         public:
-            Sequence(const Sequence&) = delete;
-            Sequence& operator=(const Sequence&) = delete;
+            Sequence(const Sequence&) = default;
+            Sequence& operator=(const Sequence&) = default;
 
             Sequence();
 
         protected:
 
         private:
-            std::vector<SequenceToken> sequence;
+            friend class Analyser;
+
+            std::vector<SequenceToken*> sequence;
 
             struct Header {
                 double score;

@@ -40,9 +40,12 @@ namespace harpe
             enum Sens{LEFT=-1,STOP=0,RIGHT=1};
 
             static const std::vector<int> get_index_max_intensitee_vector(const mgf::Spectrum& spectrum,const int nb);
-            static std::vector<SequenceToken> get_near(const std::vector<mgf::Peak*>& peak_list,const int index, const Sens inc);
+            static std::vector<SequenceToken*> get_near(const std::vector<mgf::Peak*>& peak_list,const int index, const Sens inc,std::vector<SequenceToken*> tokens_ptr);
 
-            static int depiler(pile_tokens_ptr& search,const int sens);
+            static int pop_stack(pile_tokens_ptr& search,const int sens);
+
+            static void save_stack(const pile_tokens_ptr& search,const mgf::Spectrum& spectrum,std::list<Sequence>& res);
+            
             
 
 

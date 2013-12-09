@@ -5,8 +5,10 @@
 #include <iostream>
 
 #include <harpe-algo/defines.hpp>
+#include <harpe-algo/Context.hpp>
 #include <mgf/Analyse.hpp>
 
+#define eq_error(value,to_find,error) (value >= (to_find - error) && value <= (to_find + error))
 
 namespace harpe
 {
@@ -54,12 +56,12 @@ namespace harpe
                 mgf::Peak* current_peak = peaks[current_peak_index];
                 current_peak->setUsed(true);
 
-                std::vector<SequenceToken> near=get_near(peaks,current_peak_index,sens);
+                std::vector<SequenceToken*> near=get_near(peaks,current_peak_index,sens,tokens_ptr);
                 {
                     const int size_near = near.size();
-                    if(size_near==0)
+                    if(size_near<=0)
                     {
-                        current_peak_index = depiler(search,sens);
+                        current_peak_index = pop_stack(search,sens);
 
                         if(current_peak_index == -1)
                         {
@@ -83,6 +85,47 @@ namespace harpe
                     }
                     else
                     {
+                        switch(sens)
+                        {
+                            case Sens::RIGHT : 
+                            {
+                                for (int i=0;i<size_near-1;++i)
+                                {
+                                    search.emplace_back(near[i]);
+                                }
+
+                                auto& tmp_find_last = *near[size_near-1];
+                                SequenceToken* current_stack_peak = tmp_find_last.get_peak_stack_NULL();
+
+                                current_peak_index = (current_stack_peak->peak_token.index);
+                                search.emplace_back(&tmp_find_last); //AA
+                                search.emplace_back(current_stack_peak); //PEAK
+
+                                save_stack(search,spectrum,results_right);
+                            }break;
+                            case Sens::LEFT :
+                            {
+                                auto& tmp_find_last = *near[size_near-1];
+
+                                SequenceToken* current_stack_peak = tmp_find_last.get_peak_stack_NULL();
+
+                                current_peak_index = (current_stack_peak->peak_token.index);
+                                search.emplace_front(&tmp_find_last); //AA
+
+                                for (int i=size_near-2;i>=0;--i)
+                                {
+                                    search.emplace_front(near[i]);
+                                }
+
+                                search.emplace_front(current_stack_peak); //PEAK
+
+                                save_stack(search,spectrum,results_left);
+                            }break;
+                            default:
+                                HARPE_ALGO_ERROR("Unknow sens variable value")
+                                    break;
+
+                        }
                     }
                 }
             }
@@ -148,14 +191,70 @@ namespace harpe
         return res;
     }
 
-    std::vector<SequenceToken> Analyser::get_near(const std::vector<mgf::Peak*>& peak_list,const int index, const Sens inc)
+    std::vector<SequenceToken*> Analyser::get_near(const std::vector<mgf::Peak*>& peak_list,const int index, const Sens sens,std::vector<SequenceToken*> tokens_ptr)
     {
         ///\todo
-        std::vector<SequenceToken> res;
+        std::vector<SequenceToken*> res;
+
+        const unsigned int size_pep = peak_list.size();
+        const unsigned int size_aa = Context::aa_tab.size();
+        const double initial_masse = peak_list[index]->getMasse();
+        const static double max_masse = Context::aa_tab.getMax();
+
+        if (sens >= 0) //++i Sens::RIGHT
+        {
+            for (unsigned int i=index+1;i<size_pep;++i) // loop peaks
+            {
+                if (peak_list[i]->isUsed() /*or not pep->peaks[i]->bruit*/) // si il est déja pris
+                    continue;
+
+                const double current_masse = peak_list[i]->getMasse();
+                if (initial_masse + max_masse + Context::error < current_masse) // si la masse est <= que la masse du plus gros AA (on cherche ici que les peak corespondant à 1 AA)
+                    break;
+
+                for(unsigned register int j=0;j<size_aa;++j) //on cherche l'AA qui corespond à cette différence de masse
+                {
+                    const double aa_masse = initial_masse + Context::aa_tab[j].getMasse();
+                    if(eq_error(current_masse,aa_masse,Context::error)) // avec une marge d'erreur
+                    {
+                        SequenceToken* tmp = new SequenceToken(i,peak_list[i]);
+                        tokens_ptr.emplace_back(tmp);
+
+                        tmp = new SequenceToken(j,current_masse - aa_masse,tmp);
+                        tokens_ptr.emplace_back(tmp);
+                        res.emplace_back(tokens_ptr.back());
+                    }
+                }
+            }
+        }
+        else //--i Sens::LEFT
+        {
+            for (int i=index-1;i>=0;--i) // loop peaks
+            {
+                if (peak_list[i]->isUsed() /*or not pep->peaks[i]->bruit*/) // si il est déja pris
+                    continue;
+
+                const double current_masse = peak_list[i]->getMasse();
+                if (initial_masse - max_masse - Context::error > current_masse) // si la masse est >= que la masse du plus gros AA (on cherche ici que les peak corespondant à 1 AA)
+                    break;
+
+                for(unsigned int j=0;j<size_aa;++j) //on cherche l'AA qui corespond à cette différence de masse
+                {
+                    const double aa_masse = initial_masse - Context::aa_tab[j].getMasse();
+                    if(eq_error(current_masse,aa_masse,Context::error)) // avec une marge d'erreur
+                    {
+                        tokens_ptr.emplace_back(new SequenceToken(i,peak_list[i]));
+                        tokens_ptr.emplace_back(new SequenceToken(j,current_masse - aa_masse,tokens_ptr.back()));
+                        res.emplace_back(tokens_ptr.back());
+                    }
+                }
+            }
+        }
+            
         return res;
     }
 
-    int Analyser::depiler(Analyser::pile_tokens_ptr& search,const int sens)
+    int Analyser::pop_stack(Analyser::pile_tokens_ptr& search,const int sens)
     {
         int current_peak_index = -1;
 
@@ -259,5 +358,68 @@ remove_1_peak_left:
         }
 end: 
         return current_peak_index;
+    }
+
+    void Analyser::save_stack(const pile_tokens_ptr& search,const mgf::Spectrum& spectrum,std::list<Sequence>& res)
+    {
+        Sequence sequence;
+        auto i=search.begin();
+        auto end = search.end();
+
+        /*int nb=0;
+        double masse = 0;
+        double intensitee = spectrum.getHeader().getIntensity();
+        double errors = 0;
+        double error_tot = 0;
+        */
+
+        while(i!=end)
+        {
+            SequenceToken& tmp_i= **i;
+
+            if (tmp_i.type == SequenceToken::Type::PEAK_TOKEN)
+            {
+                sequence.sequence.emplace_back(&tmp_i);
+                /*Parser::peptide::peak* p = tmp_i.peak_token.pt_data;
+                intensitee += p->intensitee;
+                if ( pep->is_one_of_h2o(p))
+                    masse += MH2O;
+                */
+            }
+            else if (tmp_i.type == SequenceToken::Type::AA_TOKEN and tmp_i.aa_token.pt_data==NULL)
+            {
+                sequence.sequence.emplace_back(&tmp_i);
+                /*errors += ABS(tmp_i.aa_token.error);
+                error_tot += tmp_i.aa_token.error;
+                masse += aa_tab[tmp_i.aa_token.index].masse;
+                ++nb;
+                */
+            }
+            ++i;
+        }
+        sequence.sequence.shrink_to_fit();
+        //add the current
+        res.emplace_back(sequence);
+        //add all other possibilites tha can be (or not) complete
+        --i;//peaks
+        --i;//current head
+        end = search.begin();//decement
+        const int size =sequence.sequence.size();
+        while(i!=end)
+        {
+            SequenceToken& tmp_i= **i;
+
+            if(tmp_i.type == SequenceToken::Type::PEAK_TOKEN)
+            {
+                break;
+            }
+            else if (tmp_i.type == SequenceToken::Type::AA_TOKEN and tmp_i.aa_token.pt_data!=NULL)
+            {
+                sequence.sequence[size-2] = &tmp_i;
+                sequence.sequence[size-1] = tmp_i.aa_token.pt_data;
+                res.emplace_back(sequence);
+            }
+            --i;
+        }
     }
 }

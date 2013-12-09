@@ -3,4 +3,5 @@
 namespace harpe
 {
     AATab Context::aa_tab;
+    double Context::error=0.05;
 }
