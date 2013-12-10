@@ -47,10 +47,7 @@ namespace harpe
 
             static void save_stack(const pile_tokens_ptr& search,const mgf::Spectrum& spectrum,std::list<Sequence>& res);
 
-            /**
-             * \todo set header
-             */
-            static void merge_solution(std::list<Sequence>& finds,const std::list<Sequence>& left_part,const std::list<Sequence>& right_part); //met tout dasn left
+            static void merge_solution(std::list<Sequence>& finds,const std::list<Sequence>& left_part,const std::list<Sequence>& right_part,const mgf::Spectrum&); //met tout dasn left
             
 
 

@@ -14,7 +14,7 @@ namespace harpe
             
             static AATab aa_tab;
             static double error;
-
+            static int finds_max_size;
 
         protected:
 

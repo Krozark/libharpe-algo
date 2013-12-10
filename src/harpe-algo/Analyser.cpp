@@ -130,12 +130,7 @@ namespace harpe
                 }
             }
 
-            std::cout<<"-- RIGHT --"<<std::endl;
-            __print__(results_right,std::cout);
-            std::cout<<"-- LEFT --"<<std::endl;
-            __print__(results_left,std::cout);
-
-            merge_solution(finds,results_left,results_right);
+            merge_solution(finds,results_left,results_right,spectrum);
         }
 
         std::cout<<"-- FINDS --"<<std::endl;
@@ -434,7 +429,7 @@ remove_1_peak_left:
         }
     }
 
-    void Analyser::merge_solution(std::list<Sequence>& finds,const std::list<Sequence>& left_part,const std::list<Sequence>& right_part)
+    void Analyser::merge_solution(std::list<Sequence>& finds,const std::list<Sequence>& left_part,const std::list<Sequence>& right_part,const mgf::Spectrum& spectrum)
     {
 
         auto l_end = left_part.end();
@@ -473,61 +468,12 @@ remove_1_peak_left:
                         //ajout du noyeau (header-peak(en commun)-[AA -peak]* )
                         copy((*j).sequence.begin()+1,(*j).sequence.end(),back_inserter(new_seq.sequence)); 
                         //ajout du nouveau
+
+                        new_seq.initHeader(spectrum);
                         
-                        //TODO
-                        /*#if DEBUG & DEBUG_STATS 
-                        ++calc_stats[k-1][NB_SOL_FIND];
-                        #endif
-                        */
-
-                        //SCORE
-                        /*#ifndef APPRENTISSAGE
-                        calc_values(tmp_values,tmp,pep);
-                        tmp[0]->header_token.score = calc_score(tmp_values);
-                        #endif
-                        */
-
-                        //print_AA(tmp);
-
-                        //finds.emplace_back(move(tmp));
                         ///////////////////////////////////////////
 
-                        /*#ifndef APPRENTISSAGE
-                        if(finds_max_size > 0 and ++_size > finds_max_size*5)
-                        {
-                            const auto& _begin = finds.begin();
-                            partial_sort(_begin,_begin+finds_max_size,finds.end(),solution_gt);
-                            finds.resize(finds_max_size);
-                            _size = finds_max_size;
-                        }
-                        #endif
-                        */
                         /*
-                        v_tokens_ptr tmp= (*i);
-                        stack_token* tmp_head = new stack_token(*tmp[0]);
-                        stack_token& i_0 = *tmp_head;
-                        stack_token& j_0 = *(*j)[0];
-                        //fusion des header
-                        i_0.header_token.holds[Parser::peptide::FIN_H2O].link = j_0.header_token.holds[Parser::peptide::FIN_H2O].link;
-                        i_0.header_token.holds[Parser::peptide::FIN_H2O].to_find = j_0.header_token.holds[Parser::peptide::FIN_H2O].to_find;
-
-                        i_0.header_token.holds[Parser::peptide::FIN].link = j_0.header_token.holds[Parser::peptide::FIN].link;
-                        i_0.header_token.holds[Parser::peptide::FIN].to_find = j_0.header_token.holds[Parser::peptide::FIN].to_find;
-                        //ajout du noyeau (header-peak(en commun)-[AA -peak]* )
-                        copy((*j).begin()+2,(*j).end(),back_inserter(tmp)); 
-                        //ajout du nouveau
-                        
-                        //TODO
-                        #if DEBUG & DEBUG_STATS 
-                        ++calc_stats[k-1][NB_SOL_FIND];
-                        #endif
-
-                        //SCORE
-                        #ifndef APPRENTISSAGE
-                        calc_values(tmp_values,tmp,pep);
-                        i_0.header_token.score = calc_score(tmp_values);
-                        #endif
-
                         if(_size < finds_max_size or i_0.header_token.score > finds[_size-1][0]->header_token.score)
                         {
                             tokens_ptr.emplace_back(tmp_head);//save to be delete at the end
@@ -550,10 +496,6 @@ remove_1_peak_left:
             }
         }
         
-
-        #ifndef APPRENTISSAGE
-        const auto& _begin = finds.begin();
-
         /*int _size = finds.size();
         if(_size<finds_max_size)
             sort(_begin,finds.end(),solution_gt);
@@ -565,7 +507,6 @@ remove_1_peak_left:
         {
             finds.resize(finds_max_size);
         }*/
-        #endif
     };
 
 
