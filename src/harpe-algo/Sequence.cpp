@@ -56,8 +56,8 @@ namespace harpe
             {
                 stream<<MGF_JAUNE<<"-"<<Context::aa_tab[v_i.aa_token.index].getSlug();
             }
-            else if (i < size-1 and v_i.type == SequenceToken::PEAK_TOKEN)
-                stream<<MGF_VERT<<"-<"<<v_i.peak_token.pt_data->getMasse()<<">";
+            /*else if (i < size-1 and v_i.type == SequenceToken::PEAK_TOKEN)
+                stream<<MGF_VERT<<"-<"<<v_i.peak_token.pt_data->getMasse()<<">";*/
         }
         stream<<MGF_BLANC;
 

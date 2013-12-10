@@ -47,13 +47,13 @@ namespace harpe
 
             static void save_stack(const pile_tokens_ptr& search,const mgf::Spectrum& spectrum,std::list<Sequence>& res);
 
-            static void merge_solution(std::list<Sequence>& finds,const std::list<Sequence>& left_part,const std::list<Sequence>& right_part,const mgf::Spectrum&); //met tout dasn left
-            
+            static void merge_solution(std::vector<Sequence>& finds,const std::list<Sequence>& left_part,const std::list<Sequence>& right_part,const mgf::Spectrum&); //met tout dasn left
 
 
 
             static void __print__(const std::vector<SequenceToken*>&,std::ostream& stream);
             static void __print__(const std::list<Sequence>&,std::ostream& stream);
+            static void __print__(const std::vector<Sequence>&,std::ostream& stream);
             
             
         private:

@@ -7,8 +7,9 @@
 
 int main(int argc,char* argv[])
 {
-    if (harpe::Context::loadFromLib("./calc_score.so"))
+    if (not harpe::Context::loadFromLib("./calc_score.so"))
         return 1;
+
     int r=0;
     std::ifstream file(argv[1], std::ifstream::in);
     if (file.good())

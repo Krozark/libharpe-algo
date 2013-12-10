@@ -27,7 +27,8 @@ namespace harpe
 
             static AATab aa_tab;
             static double error;
-            static int finds_max_size;
+            static unsigned int finds_max_size;
+            static unsigned int finds_max_size_tmp;
 
             typedef double (*calc_score_type)(const double* const values);
         private:
