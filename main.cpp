@@ -7,11 +7,12 @@
 
 int main(int argc,char* argv[])
 {
+    if (harpe::Context::loadFromLib("./calc_score.so"))
+        return 1;
     int r=0;
     std::ifstream file(argv[1], std::ifstream::in);
     if (file.good())
     {
-        harpe::Context::loadFromLib("calc_score.so");
 
         mgf::Driver driver(file);
         mgf::Spectrum* spectrum = nullptr;
@@ -23,7 +24,7 @@ int main(int argc,char* argv[])
         }
         file.close();
 
-        harpe::Context::closeLib();
     }
+    harpe::Context::closeLib();
     return r;
 }

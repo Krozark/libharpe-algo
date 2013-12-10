@@ -31,16 +31,15 @@ namespace harpe
 
             typedef double (*calc_score_type)(const double* const values);
         private:
-            static calc_score_type calc_score_func;
+            static union Alias{
+                calc_score_type calc_score_func;
+                void* obj;
+            } alias;
             #ifdef _WIN32 //_WIN64
             static HMODULE lib;
-            static FARPROC initializer;
             #elif __linux
             static void* lib;
-            static void* initializer;
             #endif
-
-            
     };
 }
 #endif

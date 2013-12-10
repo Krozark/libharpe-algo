@@ -10,14 +10,12 @@ namespace harpe
     AATab Context::aa_tab;
     double Context::error=0.05;
     int Context::finds_max_size=1000;
-    Context::calc_score_type Context::calc_score_func = nullptr;
+    Context::Alias Context::alias;
 
     #ifdef _WIN32 //_WIN64
     HMODULE Context::lib;
-    FARPROC Context::initializer = nullptr;
     #elif __linux
     void* Context::lib = nullptr;
-    void* Context::initializer = nullptr;
     #endif
 
 
@@ -32,14 +30,13 @@ namespace harpe
         }
         else
         {
-            initializer = GetProcAddress(lib,"calc_score");
-            if (initializer == nullptr)
+            alias.obj = GetProcAddress(lib,"calc_score");
+            if (alias.obj == nullptr)
             {
                 HARPE_ALGO_ERROR("Enable to find calc_score() in "<<libname);
             }
             else
             {
-                calc_score_func = (calc_score_type)(initializer);
                 res = true;
             }
         }
@@ -51,15 +48,13 @@ namespace harpe
         }
         else
         {
-            initializer = dlsym(lib,"calc_score");
-            if (initializer == nullptr)
+            alias.obj = dlsym(lib,"calc_score");
+            if (alias.obj == nullptr)
             {
                 HARPE_ALGO_ERROR("Enable to find calc_score() in "<<libname);
             }
             else
             {
-                std::cout<<(int)initializer<<std::endl;
-                calc_score_func = (calc_score_type)(initializer);
                 res = true;
             }
         }
@@ -78,6 +73,6 @@ namespace harpe
 
     double Context::calc_score(const double* const values)
     {
-        return (*calc_score_func)(values);
+        return (*alias.calc_score_func)(values);
     };
 }

@@ -49,10 +49,11 @@ $(SUBDIRS):
 	@mv $@ "$(OBJ_DIR)"
 
 
-clean: $(CLEANDIRS)
+clean: $(CLEANDIRS) calc_score
 
 $(CLEANDIRS): 
 	$(MAKE) -C $(@:clean-%=%) clean
 	@rm -f *.o
+	@rm -f *.so
 	@rm -f $(EXEC)
 
