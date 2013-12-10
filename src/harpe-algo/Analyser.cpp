@@ -30,7 +30,7 @@ namespace harpe
         }
     }
 
-    std::list<harpe::Sequence> Analyser::analyse(const mgf::Spectrum& spectrum,int debut)
+    std::vector<harpe::Sequence> Analyser::analyse(const mgf::Spectrum& spectrum,int debut)
     {
         std::vector<Sequence> finds;// results
 
@@ -140,11 +140,10 @@ namespace harpe
             merge_solution(finds,results_left,results_right,spectrum);
         }
 
-        std::cout<<"-- FINDS --"<<std::endl;
-        __print__(finds,std::cout);
+        //std::cout<<"-- FINDS --"<<std::endl;
+        //__print__(finds,std::cout);
 
-        std::list<harpe::Sequence> res;
-        return res;
+        return finds;
     }
 
     const std::vector<int> Analyser::get_index_max_intensitee_vector(const mgf::Spectrum& spectrum,const int nb)
