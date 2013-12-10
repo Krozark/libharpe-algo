@@ -130,10 +130,12 @@ namespace harpe
                 }
             }
 
+            /*
             std::cout<<"-- RIGHT --"<<std::endl;
             __print__(results_right,std::cout);
             std::cout<<"-- LEFT --"<<std::endl;
             __print__(results_left,std::cout);
+            */
 
             merge_solution(finds,results_left,results_right,spectrum);
         }
@@ -411,10 +413,10 @@ remove_1_peak_left:
         sequence.sequence.shrink_to_fit();
         //add the current
         res.emplace_back(sequence);
+        --i;//go to aa
+        --i;//go to head? or peak
+        end = search.begin();//decrement
         //add all other possibilites tha can be (or not) complete
-        --i;//peaks
-        --i;//current head
-        end = search.begin();//decement
         const int size =sequence.sequence.size();
         while(i!=end)
         {
@@ -447,20 +449,19 @@ remove_1_peak_left:
             return _1.header.score>_2.header.score;
         };
 
-        /*#ifndef APPRENTISSAGE
-        double tmp_values[VALUES_SIZE];
-        #endif
-        */
-
         for(auto i=l_begin; i != l_end; ++i)
         {
             if(i->sequence.size() > 1) //il y a au moins 1 AA
             {
+                auto& ii = *i;
                 for(auto j=r_begin; j!= r_end; ++j)
                 {
                     if(j->sequence.size() > 1) //il y a au moins 1 AA
                     {
+                        auto& jj=*j;
+
                         Sequence new_seq;
+                        new_seq.sequence.reserve(ii.sequence.size()+jj.sequence.size()-1);
 
                         //fusion des header
                         //i_0.header_token.holds[Parser::peptide::FIN_H2O].link = j_0.header_token.holds[Parser::peptide::FIN_H2O].link;
@@ -469,27 +470,28 @@ remove_1_peak_left:
                         //i_0.header_token.holds[Parser::peptide::FIN].link = j_0.header_token.holds[Parser::peptide::FIN].link;
                         //i_0.header_token.holds[Parser::peptide::FIN].to_find = j_0.header_token.holds[Parser::peptide::FIN].to_find;
                         //ajout du noyeau (header-peak(en commun)-[AA -peak]* )
-                        copy((*j).sequence.begin()+1,(*j).sequence.end(),back_inserter(new_seq.sequence)); 
+                        copy(ii.sequence.begin(),ii.sequence.end(),back_inserter(new_seq.sequence)); 
+                        copy(jj.sequence.begin()+1,jj.sequence.end(),back_inserter(new_seq.sequence)); 
                         //ajout du nouveau
-
                         new_seq.initHeader(spectrum);
                         
                         ///////////////////////////////////////////
 
-                        if(_size < Context::finds_max_size or new_seq.header.score > finds[_size-1].header.score)
+                        finds.emplace_back(std::move(new_seq));
+                        /*if(_size < Context::finds_max_size or new_seq.header.score > finds[_size-1].header.score)
                         {
                             finds.emplace_back(std::move(new_seq));
                             ++_size;
 
-                            /*if(_size > Context::finds_max_size_tmp)
+                            if(_size > Context::finds_max_size_tmp)
                             {
                                 const auto& _begin = finds.begin();
                                 std::partial_sort(_begin,_begin+Context::finds_max_size,finds.end(),f);
 
                                 finds.resize(Context::finds_max_size);
                                 _size = Context::finds_max_size;
-                            }*/
-                        }
+                            }
+                        }*/
                     }
                 }
             }
