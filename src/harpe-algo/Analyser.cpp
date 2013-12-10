@@ -477,8 +477,7 @@ remove_1_peak_left:
                         
                         ///////////////////////////////////////////
 
-                        finds.emplace_back(std::move(new_seq));
-                        /*if(_size < Context::finds_max_size or new_seq.header.score > finds[_size-1].header.score)
+                        if(_size < Context::finds_max_size or new_seq.header.score > finds[_size-1].header.score)
                         {
                             finds.emplace_back(std::move(new_seq));
                             ++_size;
@@ -491,15 +490,14 @@ remove_1_peak_left:
                                 finds.resize(Context::finds_max_size);
                                 _size = Context::finds_max_size;
                             }
-                        }*/
+                        }
                     }
                 }
             }
         }
         
         const auto& _begin = finds.begin();
-        std::sort(_begin,finds.end(),f);
-        /*if(_size<Context::finds_max_size)
+        if(_size<Context::finds_max_size)
         {
             std::sort(_begin,finds.end(),f);
         }
@@ -507,7 +505,7 @@ remove_1_peak_left:
         {
             std::partial_sort(_begin,_begin+Context::finds_max_size,finds.end(),f);
             finds.resize(Context::finds_max_size);
-        }*/
+        }
     };
 
 
