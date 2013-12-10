@@ -53,6 +53,9 @@ namespace harpe
 
             void __print__(std::ostream& stream)const;
 
+            template <typename ... Args>
+            inline void add(Args ... args){AAs.emplace_back(args...);}
+
         protected:
 
         private:
