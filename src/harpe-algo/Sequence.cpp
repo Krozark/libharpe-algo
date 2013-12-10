@@ -93,8 +93,6 @@ namespace harpe
 
     void Sequence::initHeader(const mgf::Spectrum& spectrum)
     {
-        HARPE_ALGO_WARNNIG("Sequence::initHeader() TODO");
-
         double values[Stats::SIZE] = {0.f};
 
         values[Stats::MASSE_PARENT]=spectrum.getMasse();
@@ -128,6 +126,8 @@ namespace harpe
 
         values[Stats::PERCENT_COUVERTURE] = values[Stats::MASSE_TOTAL] / values[Stats::MASSE_PARENT];
         values[Stats::PERCENT_INTENSITEE_UTILISEE] = values[Stats::INTENSITEE_TOTAL] /100.0 * values[Stats::INTENSITEE_TOTAL_PARENT];
+
+        header.score = Context::calc_score(values);
 
     }
 }

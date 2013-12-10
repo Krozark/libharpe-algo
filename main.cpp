@@ -3,6 +3,7 @@
 
 #include <mgf/Driver.hpp>
 #include <harpe-algo/Analyser.hpp>
+#include <harpe-algo/Context.hpp>
 
 int main(int argc,char* argv[])
 {
@@ -10,6 +11,8 @@ int main(int argc,char* argv[])
     std::ifstream file(argv[1], std::ifstream::in);
     if (file.good())
     {
+        harpe::Context::loadFromLib("calc_score.so");
+
         mgf::Driver driver(file);
         mgf::Spectrum* spectrum = nullptr;
         while((spectrum = driver.next()) != nullptr)
@@ -19,6 +22,8 @@ int main(int argc,char* argv[])
             delete spectrum;
         }
         file.close();
+
+        harpe::Context::closeLib();
     }
     return r;
 }

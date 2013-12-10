@@ -1,6 +1,6 @@
 export CC = g++
 INCPATH = -I$(CURDIR)/include 
-LIBS = -lmgf
+LIBS = -lmgf -ldl
 #-lpthread 
 #-lmysqlcppconn 
 export DEFINES = -DCOLORS 
@@ -29,6 +29,11 @@ doc : doc/html
 
 doc/html :
 	cd doc && doxygen
+
+calc_score: calc_score_func
+
+calc_score_func:
+	$(MAKE) shared -C calc_score
 
      
 $(SUBDIRS):
