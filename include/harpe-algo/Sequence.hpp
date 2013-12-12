@@ -7,12 +7,19 @@
 namespace harpe
 {
     class Analyser;
+
+    /**
+     * \brief A class thaty stor a single Sequence for a analyse
+     */
     class Sequence
     {
         public:
             Sequence(const Sequence&) = default;
             Sequence& operator=(const Sequence&) = default;
 
+            /**
+             * \brief Constructor
+             */
             Sequence();
             
             /**
@@ -21,21 +28,18 @@ namespace harpe
             void __print__(std::ostream& stream)const;
 
             /**
-             * \brief Permet d'afficher la séquence en AA de la proposition
-             *
-             * \param v la séquence
-             * \param sens Sens de lecture
-             * \param p affiche les "?" et les masse
+             * \brief debug print
              **/
             void __print_AA__(std::ostream& stream)const;
-
-        protected:
 
         private:
             friend class Analyser;
 
-            std::vector<SequenceToken*> sequence;
+            std::vector<SequenceToken*> sequence;///< the sequence
 
+            /**
+             * \brief store the meta datas
+             */
             struct Header {
                 double score;
                 /*struct _holds {
@@ -44,6 +48,9 @@ namespace harpe
                 } holds [Parser::peptide::SIZE];*/
             } header;
 
+            /**
+             * \brief Enum for stats of a Sequence
+             */
             enum Stats {
                 ERROR_TOTAL=0, ///< les erreur + et - se compensent
                 ERROR_AA_CUMUL, ///< les erreur + et - se compensnt pas
@@ -58,9 +65,12 @@ namespace harpe
                 PERCENT_INTENSITEE_UTILISEE,///< INTENSITEE_TOTAL /100 * INTENSITEE_TOTAL_PARENT  
                 SIZE ///< Nombre de valeurs
             };            
-
+            
+            /**
+             * \brief inialyse the header of a Sequence (stats valus)
+             * \param spectrum the related spectrum
+             */
             void initHeader(const mgf::Spectrum& spectrum);
-
     };
 }
 #endif
