@@ -102,6 +102,10 @@ namespace harpe
 
             };
 
+            /**
+             * \brief short cut function to get and set null ptr_data
+             * \return the SequenceToken stored by the token
+             */
             inline SequenceToken* get_peak_stack_NULL() {
                 SequenceToken* res = aa_token.pt_data;
                 aa_token.pt_data=NULL;
