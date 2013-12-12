@@ -21,7 +21,7 @@ namespace harpe
 
             void sort();
 
-            inline const harpe::db::AA& operator[](const int i){return AAs[i];}
+            inline const harpe::AA& operator[](const int i){return AAs[i];}
 
             inline unsigned int size()const{return AAs.size();}
 
@@ -36,7 +36,7 @@ namespace harpe
         protected:
 
         private:
-            std::vector<harpe::db::AA> AAs;
+            std::vector<harpe::AA> AAs;
 
             double max_mass,
                    min_mass;

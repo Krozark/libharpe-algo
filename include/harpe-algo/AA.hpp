@@ -5,27 +5,24 @@
 
 namespace harpe
 {
-    namespace db
+    class AA
     {
-        class AA
-        {
-            public:
-                AA(const AA&) = default;
-                AA& operator=(const AA&) = default;
+        public:
+            AA(const AA&) = default;
+            AA& operator=(const AA&) = default;
 
-                AA(const std::string& sl,double mas);
+            AA(const std::string& sl,double mas);
 
-                bool operator<(const AA& other)const;
+            bool operator<(const AA& other)const;
 
-                void __print__(std::ostream& stream)const;
+            void __print__(std::ostream& stream)const;
 
-                inline double getMasse()const{return masse;}
-                inline const std::string& getSlug()const{return slug;}
+            inline double getMasse()const{return masse;}
+            inline const std::string& getSlug()const{return slug;}
 
-            private:
-                std::string slug;
-                double masse;
-        };
-    }
+        private:
+            std::string slug;
+            double masse;
+    };
 }
 #endif
