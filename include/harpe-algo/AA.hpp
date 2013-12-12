@@ -5,25 +5,47 @@
 
 namespace harpe
 {
+    /**
+     * \brief A class that replesent a amino acide
+     */
     class AA
     {
         public:
             AA(const AA&) = default;
             AA& operator=(const AA&) = default;
 
+            /**
+             * \brief constuctor
+             * \param p the pk of the AA (id in the data bas, for store results)
+             * \param sl the slug for the debug print
+             * \param mas the mass the the AA
+             */
             AA(int p,const std::string& sl,double mas);
 
+            /**
+             * \brief compare 2 AA by ther mass
+             */
             bool operator<(const AA& other)const;
 
+            /**
+             * \brief debug print
+             */
             void __print__(std::ostream& stream)const;
 
+            /**
+             * \return the masse of the AA
+             */
             inline double getMasse()const{return masse;}
+
+            /**
+             * \return the slug
+             */
             inline const std::string& getSlug()const{return slug;}
 
         private:
-            int pk;
-            std::string slug;
-            double masse;
+            int pk;///< the pk in bdd
+            std::string slug; ///< the slug (unique)
+            double masse; ///< the mass
     };
 }
 #endif
