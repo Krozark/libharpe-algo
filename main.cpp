@@ -48,7 +48,6 @@ int main(int argc,char* argv[])
         {
             spectrum->__print__(std::cout);
             std::vector<harpe::Sequence> res = harpe::Analyser::analyse(*spectrum,-1);
-            std::cout<<res.size()<<std::endl;
             harpe::Analyser::free();
             delete spectrum;
         }

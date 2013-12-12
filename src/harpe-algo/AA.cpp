@@ -2,13 +2,13 @@
 
 namespace harpe
 {
-    AA::AA(int p,const std::string& sl,double mas): pk(p),slug(sl), masse(mas)
+    AA::AA(int p,const std::string& sl,double mas): pk(p),slug(sl), mass(mas)
     {
     }
 
     bool AA::operator<(const AA& other)const
     {
-        return masse<other.masse;
+        return mass<other.mass;
     }
 
     void AA::__print__(std::ostream& stream)const

@@ -13,8 +13,8 @@ namespace harpe
     {
         std::sort(AAs.begin(),AAs.end());
 
-        min_mass = AAs.front().getMasse();
-        max_mass = AAs.back().getMasse();
+        min_mass = AAs.front().getMass();
+        max_mass = AAs.back().getMass();
     }
 
 

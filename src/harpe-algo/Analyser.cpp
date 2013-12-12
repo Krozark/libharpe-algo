@@ -217,9 +217,9 @@ namespace harpe
 
         const unsigned int size_pep = peak_list.size();
         const unsigned int size_aa = Context::aa_tab.size();
-        const double initial_masse = peak_list[index]->getMasse();
-        const static double max_masse = Context::aa_tab.getMax();
-        const static double min_masse = Context::aa_tab.getMin();
+        const double initial_mass = peak_list[index]->getMass();
+        const static double max_mass = Context::aa_tab.getMax();
+        const static double min_mass = Context::aa_tab.getMin();
 
         if (sens >= 0) //++i Sens::RIGHT
         {
@@ -230,22 +230,22 @@ namespace harpe
                     )
                     continue;
 
-                const double current_masse = peak_list[i]->getMasse();
-                if(initial_masse + min_masse - Context::error > current_masse) // si la masse est >= que la masse du plus petit AA (on cherche ici que les peak corespondant à 1 AA)
+                const double current_mass = peak_list[i]->getMass();
+                if(initial_mass + min_mass - Context::error > current_mass) // si la mass est >= que la mass du plus petit AA (on cherche ici que les peak corespondant à 1 AA)
                     continue;
 
-                if (initial_masse + max_masse + Context::error < current_masse) // si la masse est <= que la masse du plus gros AA (on cherche ici que les peak corespondant à 1 AA)
+                if (initial_mass + max_mass + Context::error < current_mass) // si la mass est <= que la mass du plus gros AA (on cherche ici que les peak corespondant à 1 AA)
                     break;
 
-                for(unsigned register int j=0;j<size_aa;++j) //on cherche l'AA qui corespond à cette différence de masse
+                for(unsigned register int j=0;j<size_aa;++j) //on cherche l'AA qui corespond à cette différence de mass
                 {
-                    const double aa_masse = initial_masse + Context::aa_tab[j].getMasse();
-                    if(eq_error(current_masse,aa_masse,Context::error)) // avec une marge d'erreur
+                    const double aa_mass = initial_mass + Context::aa_tab[j].getMass();
+                    if(eq_error(current_mass,aa_mass,Context::error)) // avec une marge d'erreur
                     {
                         SequenceToken* tmp = new SequenceToken(i,peak_list[i]);
                         tokens_ptr.emplace_back(tmp);
 
-                        tmp = new SequenceToken(j,current_masse - aa_masse,tmp);
+                        tmp = new SequenceToken(j,current_mass - aa_mass,tmp);
                         tokens_ptr.emplace_back(tmp);
                         res.emplace_back(tokens_ptr.back());
                     }
@@ -259,17 +259,17 @@ namespace harpe
                 if (peak_list[i]->isUsed() /*or not pep->peaks[i]->bruit*/) // si il est déja pris
                     continue;
 
-                const double current_masse = peak_list[i]->getMasse();
-                if (initial_masse - max_masse - Context::error > current_masse) // si la masse est >= que la masse du plus gros AA (on cherche ici que les peak corespondant à 1 AA)
+                const double current_mass = peak_list[i]->getMass();
+                if (initial_mass - max_mass - Context::error > current_mass) // si la mass est >= que la mass du plus gros AA (on cherche ici que les peak corespondant à 1 AA)
                     break;
 
-                for(unsigned int j=0;j<size_aa;++j) //on cherche l'AA qui corespond à cette différence de masse
+                for(unsigned int j=0;j<size_aa;++j) //on cherche l'AA qui corespond à cette différence de mass
                 {
-                    const double aa_masse = initial_masse - Context::aa_tab[j].getMasse();
-                    if(eq_error(current_masse,aa_masse,Context::error)) // avec une marge d'erreur
+                    const double aa_mass = initial_mass - Context::aa_tab[j].getMass();
+                    if(eq_error(current_mass,aa_mass,Context::error)) // avec une marge d'erreur
                     {
                         tokens_ptr.emplace_back(new SequenceToken(i,peak_list[i]));
-                        tokens_ptr.emplace_back(new SequenceToken(j,current_masse - aa_masse,tokens_ptr.back()));
+                        tokens_ptr.emplace_back(new SequenceToken(j,current_mass - aa_mass,tokens_ptr.back()));
                         res.emplace_back(tokens_ptr.back());
                     }
                 }
@@ -393,7 +393,7 @@ remove_1_peak_left:
         auto end = search.end();
 
         /*int nb=0;
-        double masse = 0;
+        double mass = 0;
         double intensitee = spectrum.getHeader().getIntensity();
         double errors = 0;
         double error_tot = 0;
@@ -409,7 +409,7 @@ remove_1_peak_left:
                 /*Parser::peptide::peak* p = tmp_i.peak_token.pt_data;
                 intensitee += p->intensitee;
                 if ( pep->is_one_of_h2o(p))
-                    masse += MH2O;
+                    mass += MH2O;
                 */
             }
             else if (tmp_i.type == SequenceToken::Type::AA_TOKEN and tmp_i.aa_token.pt_data==NULL)
@@ -417,7 +417,7 @@ remove_1_peak_left:
                 sequence.sequence.emplace_back(&tmp_i);
                 /*errors += ABS(tmp_i.aa_token.error);
                 error_tot += tmp_i.aa_token.error;
-                masse += aa_tab[tmp_i.aa_token.index].masse;
+                mass += aa_tab[tmp_i.aa_token.index].mass;
                 ++nb;
                 */
             }

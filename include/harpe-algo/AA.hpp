@@ -33,9 +33,9 @@ namespace harpe
             void __print__(std::ostream& stream)const;
 
             /**
-             * \return the masse of the AA
+             * \return the mass of the AA
              */
-            inline double getMasse()const{return masse;}
+            inline double getMass()const{return mass;}
 
             /**
              * \return the slug
@@ -45,7 +45,7 @@ namespace harpe
         private:
             int pk;///< the pk in bdd
             std::string slug; ///< the slug (unique)
-            double masse; ///< the mass
+            double mass; ///< the mass
     };
 }
 #endif
