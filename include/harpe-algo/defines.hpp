@@ -1,7 +1,7 @@
 #ifndef HARPE_ALGO_DEFINES_HPP
 #define HARPE_ALGO_DEFINES_HPP
 
-#define HARPE_ALGO_DEFAULT_START_PEAKS_NB 10
+#define HARPE_ALGO_DEFAULT_START_PEAKS_NB 10 ///< Number of start points
 
 #include <mgf/defines.hpp>
 

@@ -2,7 +2,7 @@
 
 namespace harpe
 {
-    AA::AA(const std::string& sl,double mas): slug(sl), masse(mas)
+    AA::AA(int p,const std::string& sl,double mas): pk(p),slug(sl), masse(mas)
     {
     }
 

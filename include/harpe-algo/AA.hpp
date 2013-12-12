@@ -11,7 +11,7 @@ namespace harpe
             AA(const AA&) = default;
             AA& operator=(const AA&) = default;
 
-            AA(const std::string& sl,double mas);
+            AA(int p,const std::string& sl,double mas);
 
             bool operator<(const AA& other)const;
 
@@ -21,6 +21,7 @@ namespace harpe
             inline const std::string& getSlug()const{return slug;}
 
         private:
+            int pk;
             std::string slug;
             double masse;
     };

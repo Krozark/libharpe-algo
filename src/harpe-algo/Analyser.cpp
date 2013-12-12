@@ -13,6 +13,8 @@
 namespace harpe
 {
     
+    std::vector<SequenceToken*> Analyser::tokens_ptr;
+
     Analyser::Analyser(std::istream& input) : driver(input)
     {
     }
@@ -39,7 +41,6 @@ namespace harpe
         const unsigned int index_size=peaks_index.size();
         const std::vector<mgf::Peak*>& peaks = spectrum.getPeaks();
 
-        std::vector<SequenceToken*> tokens_ptr;///< stocke les stack token pour les delete à la fin de l'analyse
         for(unsigned int index=0;index<index_size;++index)
         {
             register int current_peak_index = peaks_index[index];
@@ -58,7 +59,7 @@ namespace harpe
                 mgf::Peak* current_peak = peaks[current_peak_index];
                 current_peak->setUsed(true);
 
-                std::vector<SequenceToken*> near=get_near(peaks,current_peak_index,sens,tokens_ptr);
+                std::vector<SequenceToken*> near=get_near(peaks,current_peak_index,sens);
                 const int size_near = near.size();
                 if(size_near<=0)
                 {
@@ -146,6 +147,14 @@ namespace harpe
         return finds;
     }
 
+    void Analyser::free()
+    {
+        const unsigned int size = tokens_ptr.size();
+        for(unsigned int i=0;i<size;++i)
+            delete tokens_ptr[i];
+        tokens_ptr.clear();
+    }
+
     const std::vector<int> Analyser::get_index_max_intensitee_vector(const mgf::Spectrum& spectrum,const int nb)
     {
         std::vector<int> res;
@@ -201,7 +210,7 @@ namespace harpe
         return res;
     }
 
-    std::vector<SequenceToken*> Analyser::get_near(const std::vector<mgf::Peak*>& peak_list,const int index, const Sens sens,std::vector<SequenceToken*> tokens_ptr)
+    std::vector<SequenceToken*> Analyser::get_near(const std::vector<mgf::Peak*>& peak_list,const int index, const Sens sens)
     {
         ///\todo
         std::vector<SequenceToken*> res;
@@ -210,16 +219,21 @@ namespace harpe
         const unsigned int size_aa = Context::aa_tab.size();
         const double initial_masse = peak_list[index]->getMasse();
         const static double max_masse = Context::aa_tab.getMax();
-
+        const static double min_masse = Context::aa_tab.getMin();
 
         if (sens >= 0) //++i Sens::RIGHT
         {
             for (unsigned int i=index+1;i<size_pep;++i) // loop peaks
             {
-                if (peak_list[i]->isUsed() /*or not pep->peaks[i]->bruit*/) // si il est déja pris
+                if (peak_list[i]->isUsed()// si il est déja pris
+                    /*or not pep->peaks[i]->bruit*/
+                    )
                     continue;
 
                 const double current_masse = peak_list[i]->getMasse();
+                if(initial_masse + min_masse - Context::error > current_masse) // si la masse est >= que la masse du plus petit AA (on cherche ici que les peak corespondant à 1 AA)
+                    continue;
+
                 if (initial_masse + max_masse + Context::error < current_masse) // si la masse est <= que la masse du plus gros AA (on cherche ici que les peak corespondant à 1 AA)
                     break;
 
