@@ -27,7 +27,8 @@ namespace harpe
 
             /**
              * \brief Sort the AA stored by ther mass.
-             * This function have to be call before any run, for iternal optimisations
+             * This function have to be call before any run, for iternal optimisations.
+             * This also set the min and max mass values
              */
             void sort();
 
@@ -51,18 +52,25 @@ namespace harpe
              */
             inline double getMin()const{return min_mass;}
 
+            /**
+             * \brief debug print of all AA
+             */
             void __print__(std::ostream& stream)const;
 
+            /**
+             * \brief add a AA to the inten contener.
+             * \param args The AA constructor arguments
+             */
             template <typename ... Args>
             inline void add(Args ... args){AAs.emplace_back(args...);}
 
         protected:
 
         private:
-            std::vector<harpe::AA> AAs;
+            std::vector<harpe::AA> AAs; ///< store the AAs
 
-            double max_mass,
-                   min_mass;
+            double max_mass, ///< maximal mass of the AA.
+                   min_mass;///< minimal mass of the AA
     };
 }
 #endif
