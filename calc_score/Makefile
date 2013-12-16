@@ -1,6 +1,3 @@
-BASE=calc_score
-STATIC=$(BASE).a
-SHARED=$(BASE).so
 
 #.cpp.o:
 #	$(CC) $(FLAGS) -o "$@" -c "$<" 
