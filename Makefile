@@ -4,9 +4,12 @@ LIBS = -lmgf -ldl
 #-lpthread 
 #-lmysqlcppconn 
 export DEFINES = -DCOLORS 
-export FLAGS = -g -std=c++0x $(INCPATH) $(LIBS) $(DEFINES)
+export FLAGS = -o3 -std=c++0x $(INCPATH) $(LIBS) $(DEFINES)
 export TOP = $(CURDIR)
 export OBJ_DIR = $(TOP)/obj
+export BASE=calc_score
+export STATIC=$(BASE).a
+export SHARED=$(BASE).so
 
 SRC = $(wildcard *.c*)
 OBJ = $(SRC:.cpp=.o) $(SRC:*.cpp=.o)
