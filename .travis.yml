@@ -9,7 +9,7 @@ install:
     cd libmgf 
     && sudo make install
     && cd ..
-    && make calc_score
+    && ./build.sh
 
 language: cpp
 
