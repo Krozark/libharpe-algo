@@ -64,6 +64,8 @@ namespace harpe
             template <typename ... Args>
             inline void add(Args ... args){AAs.emplace_back(args...);}
 
+            inline void clear(){AAs.clear();max_mass=min_mass=0;}
+
         protected:
 
         private:
