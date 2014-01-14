@@ -42,6 +42,11 @@ namespace harpe
              */
             inline const std::string& getSlug()const{return slug;}
 
+            /**
+             * \return the pk
+             */
+            inline int getPk()const{return pk;};
+
         private:
             int pk;///< the pk in bdd
             std::string slug; ///< the slug (unique)

@@ -5,6 +5,11 @@
 
 #include <mgf/Peak.hpp>
 
+namespace ntw
+{
+    class Serializer;
+}
+
 
 namespace harpe
 {
@@ -72,6 +77,14 @@ namespace harpe
                 //AA_HOLD_TOKEN, ///< acide aminé théorique
                 PEAK_TOKEN ///< Pic
             };
+
+            /**
+             * \brief store the Token as :
+             * for AA_TOKEN => PK of the related AA
+             * for PEAK_TOKEN => Masse pf the related peak
+             */
+            friend ntw::Serializer& operator<<(ntw::Serializer& stream,const SequenceToken& self);
+            
 
         private:
             friend class Analyser;

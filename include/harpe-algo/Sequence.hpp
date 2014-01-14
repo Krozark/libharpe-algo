@@ -32,6 +32,11 @@ namespace harpe
              **/
             void __print_AA__(std::ostream& stream)const;
 
+            /**
+             * \brief store the Sequence
+             */
+            friend ntw::Serializer& operator<<(ntw::Serializer& stream,const Sequence& self);
+
         private:
             friend class Analyser;
 

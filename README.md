@@ -10,7 +10,7 @@ Requirement
 ===========
 
 libmgf : https://github.com/Krozark/libmgf
-
+cppsocket (headers) :  https://github.com/Krozark/cpp-Socket
 
 
 Instalation

@@ -5,6 +5,8 @@
 #include <mgf/Spectrum.hpp>
 #include <mgf/Convert.hpp>
 
+#include <Socket/Serializer.hpp>
+
 namespace harpe
 {
     
@@ -90,6 +92,15 @@ namespace harpe
                 cout<<BLEU<<"-<"<<pep->special_peaks[Parser::peptide::FIN]->mass<<">"<<BLANC;
         }*/
     };
+
+    ntw::Serializer& operator<<(ntw::Serializer& stream,const Sequence& self)
+    {
+        stream<<self.header.score
+            <<self.sequence.size();
+        for(SequenceToken* t : self.sequence)
+            stream<<*t;
+        return stream;
+    }
 
     void Sequence::initHeader(const mgf::Spectrum& spectrum)
     {

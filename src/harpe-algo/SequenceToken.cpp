@@ -3,6 +3,8 @@
 #include <iostream>
 #include <harpe-algo/Context.hpp>
 
+#include <Socket/Serializer.hpp>
+
 namespace harpe
 {
     SequenceToken::SequenceToken(): type(Type::UNKNOW)
@@ -94,5 +96,19 @@ namespace harpe
             stream<<"PEAKS_TOKEN ";
             peak_token.pt_data->__print__(stream);
         }
+    }
+
+    ntw::Serializer& operator<<(ntw::Serializer& stream,const SequenceToken& self)
+    {
+        if (self.type==SequenceToken::Type::AA_TOKEN)
+        {
+            stream<<Context::aa_tab[self.aa_token.index].getPk();
+        }
+        else if (self.type == SequenceToken::Type::PEAK_TOKEN)
+        {
+            stream<<self.peak_token.pt_data->getMass();
+        }
+
+        return stream;
     }
 }
