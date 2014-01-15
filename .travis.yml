@@ -3,10 +3,17 @@ before_install:
     && cd libmgf
     && ./build.sh
     && cd ..
+    && git clone https://github.com/Krozark/cpp-Socket
+    && cd cpp-Socket
+    && ./build.sh
+    && cd ..
 
 
 install: 
     cd libmgf 
+    && sudo make install
+    && cd ..
+    && cd cpp-Socket
     && sudo make install
     && cd ..
     && ./build.sh
