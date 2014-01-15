@@ -102,10 +102,12 @@ namespace harpe
     {
         if (self.type==SequenceToken::Type::AA_TOKEN)
         {
+            std::cout<<"AA("<<Context::aa_tab[self.aa_token.index].getPk()<<"),";
             stream<<Context::aa_tab[self.aa_token.index].getPk();
         }
         else if (self.type == SequenceToken::Type::PEAK_TOKEN)
         {
+            std::cout<<"peak("<<self.peak_token.pt_data->getMass()<<"),";
             stream<<self.peak_token.pt_data->getMass();
         }
 

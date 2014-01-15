@@ -99,6 +99,7 @@ namespace harpe
             <<(unsigned int)self.sequence.size();
         for(SequenceToken* t : self.sequence)
             stream<<*t;
+        std::cout<<std::endl;
         return stream;
     }
 
