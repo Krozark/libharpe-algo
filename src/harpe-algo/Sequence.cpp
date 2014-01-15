@@ -96,7 +96,7 @@ namespace harpe
     ntw::Serializer& operator<<(ntw::Serializer& stream,const Sequence& self)
     {
         stream<<self.header.score
-            <<self.sequence.size();
+            <<(unsigned int)self.sequence.size();
         for(SequenceToken* t : self.sequence)
             stream<<*t;
         return stream;
