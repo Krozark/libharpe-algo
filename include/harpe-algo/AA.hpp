@@ -3,8 +3,17 @@
 
 #include <string>
 
+namespace ntw
+{
+    class Serializer;
+}
+
+
 namespace harpe
 {
+
+    class SequenceToken;
+
     /**
      * \brief A class that replesent a amino acide
      */
@@ -21,6 +30,17 @@ namespace harpe
              * \param mas the mass the the AA
              */
             AA(int p,const std::string& sl,double mas);
+
+            /**
+             * \brief constuctor
+             * \param p the pk of the AA (id in the data bas, for store results)
+             * \param sl the slug for the debug print
+             * \param mas the mass the the AA
+             * \param mod_p the modification pk
+             * \param delta the mass delta of the modification
+             * \param position the modification pos value. CHOICES = 1:partout,2:N-term,3:C-term"uuuuu
+             */
+            AA(int p,const std::string& sl,double mas,int mod_p,float delta, int pos);
 
             /**
              * \brief compare 2 AA by ther mass
@@ -41,16 +61,22 @@ namespace harpe
              * \return the slug
              */
             inline const std::string& getSlug()const{return slug;}
-
+            
             /**
-             * \return the pk
-             */
-            inline int getPk()const{return pk;};
+             * \brief output the AA
+             */            
+            friend ntw::Serializer& operator<<(ntw::Serializer& stream,const AA& self);
+
 
         private:
-            int pk;///< the pk in bdd
+            friend class SequenceToken;
+
+            int pk;///< the AA pk in bdd
             std::string slug; ///< the slug (unique)
             double mass; ///< the mass
+            
+            int mod_pk;//< modification pk in bdd
+            int position; ///< CHOICES = ((1,"partout"),(2,"N-term"),(3,"C-term")
     };
 }
 #endif

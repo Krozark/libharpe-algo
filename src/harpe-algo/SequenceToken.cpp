@@ -102,7 +102,7 @@ namespace harpe
     {
         if (self.type==SequenceToken::Type::AA_TOKEN)
         {
-            stream<<Context::aa_tab[self.aa_token.index].getPk();
+            stream<<Context::aa_tab[self.aa_token.index];
         }
         else if (self.type == SequenceToken::Type::PEAK_TOKEN)
         {
