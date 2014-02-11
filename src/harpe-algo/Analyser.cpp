@@ -35,10 +35,12 @@ namespace harpe
         }
     }
 
+
+
     std::vector<harpe::Sequence> Analyser::analyse(const mgf::Spectrum& spectrum,int& status,int debut)
     {
         std::vector<Sequence> finds;// results
-        status = Status::Unknow;
+        status = Status::Ok;
 
         const std::vector<int> peaks_index = debut>0?std::vector<int>(debut):get_index_max_intensitee_vector(spectrum,HARPE_ALGO_DEFAULT_START_PEAKS_NB);
 
@@ -57,6 +59,8 @@ namespace harpe
 
             tokens_ptr.emplace_back(new SequenceToken(current_peak_index,peaks[current_peak_index]));
             search.emplace_back(tokens_ptr.back());
+            
+            double max_mem = (double)sys::memory::Physical::total() * 0.55; ///\todo TODO
 
             while (sens)
             {
@@ -131,6 +135,13 @@ namespace harpe
                             HARPE_ALGO_ERROR("Unknow sens variable value")
                                 break;
 
+                    }
+
+                    if (sys::memory::Physical::usedByProc() > max_mem)
+                    {
+                        HARPE_ALGO_WARNNIG("out of memory")
+                        status = Status::MemoryError;
+                        sens = Sens::STOP;
                     }
                 }
             }
@@ -462,9 +473,42 @@ remove_1_peak_left:
         auto r_begin = right_part.begin();
 
         unsigned int _size = finds.size();
+
         auto f = [](const Sequence& _1,const Sequence& _2){
             return _1.header.score>_2.header.score;
         };
+
+        for(auto i=l_begin; i != l_end; ++i)
+        {
+            ++_size;
+            finds.emplace_back(*i);
+            finds.back().initHeader(spectrum);
+
+            if(_size > Context::finds_max_size_tmp)
+            {
+                const auto& _begin = finds.begin();
+                std::partial_sort(_begin,_begin+Context::finds_max_size,finds.end(),f);
+
+                finds.resize(Context::finds_max_size);
+                _size = Context::finds_max_size;
+            }
+        }
+
+        for(auto i=r_begin; i != r_end; ++i)
+        {
+            ++_size;
+            finds.emplace_back(*i);
+            finds.back().initHeader(spectrum);
+
+            if(_size > Context::finds_max_size_tmp)
+            {
+                const auto& _begin = finds.begin();
+                std::partial_sort(_begin,_begin+Context::finds_max_size,finds.end(),f);
+
+                finds.resize(Context::finds_max_size);
+                _size = Context::finds_max_size;
+            }
+        }
 
         double max_mem = (double)sys::memory::Physical::total() * 0.7; ///\todo TODO
 
@@ -512,8 +556,7 @@ remove_1_peak_left:
 
                             if (sys::memory::Physical::usedByProc() > max_mem)
                             {
-                                std::cerr<<"too mush of the memory is used by this program. stop"<<std::endl;
-                                ///\todo set status to incomplet
+                                HARPE_ALGO_WARNNIG("out of memory");
                                 status = Status::MemoryError;
                                 goto end_merge;
                             }
@@ -522,7 +565,6 @@ remove_1_peak_left:
                 }
             }
         }
-        status = Status::Ok;
 end_merge:
         
         const auto& _begin = finds.begin();
