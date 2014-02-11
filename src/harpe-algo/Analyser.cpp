@@ -38,7 +38,7 @@ namespace harpe
     std::vector<harpe::Sequence> Analyser::analyse(const mgf::Spectrum& spectrum,int& status,int debut)
     {
         std::vector<Sequence> finds;// results
-        status = Status::Ok;
+        status = Status::Unknow;
 
         const std::vector<int> peaks_index = debut>0?std::vector<int>(debut):get_index_max_intensitee_vector(spectrum,HARPE_ALGO_DEFAULT_START_PEAKS_NB);
 
@@ -522,7 +522,7 @@ remove_1_peak_left:
                 }
             }
         }
-
+        status = Status::Ok;
 end_merge:
         
         const auto& _begin = finds.begin();

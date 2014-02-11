@@ -39,9 +39,11 @@ namespace harpe
              */
             static std::vector<harpe::Sequence> analyse(const mgf::Spectrum& s,int& status,int debut=-1);
 
-            enum Status {Ok = 0, ///< no problem [default]
-                Timeout, ///< more time is needed to finish
-                MemoryError //< Too much memory needed to finish the analyse
+            enum Status {
+                Unknow = 0, ///< unknow status
+                Ok = 1, ///< no problem [default]
+                Timeout =2, ///< more time is needed to finish
+                MemoryError = 3 //< Too much memory needed to finish the analyse
             };
 
             /**
