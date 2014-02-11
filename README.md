@@ -9,8 +9,10 @@ Main Hapre algorithm
 Requirement
 ===========
 
+libdl
 libmgf : https://github.com/Krozark/libmgf
-cppsocket (headers) :  https://github.com/Krozark/cpp-Socket
+cppsocket (headers only) :  https://github.com/Krozark/cpp-Socket
+libmonitoring : https://github.com/Krozark/monitoring
 
 
 Instalation

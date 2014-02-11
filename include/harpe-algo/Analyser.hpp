@@ -34,9 +34,15 @@ namespace harpe
 
             /**
              * \brief analyse all the MS/MS spectrum in the parsed input, and try to build the Sequence
+             * \param s the spectrum to analyse
+             * \param status the status of the analyse. \see Status.
              */
-            static std::vector<harpe::Sequence> analyse(const mgf::Spectrum& s,int debut=-1);
+            static std::vector<harpe::Sequence> analyse(const mgf::Spectrum& s,int& status,int debut=-1);
 
+            enum Status {Ok = 0, ///< no problem [default]
+                Timeout, ///< more time is needed to finish
+                MemoryError //< Too much memory needed to finish the analyse
+            };
 
             /**
              * \brief free all the alocated memory
@@ -88,8 +94,9 @@ namespace harpe
              * \param left_part the left sequences part
              * \param right_part the right part Sequence
              * \param spectrum the related spectrum
+             * \param status the status of the analyse. \see Status.
              */
-            static void merge_solution(std::vector<Sequence>& finds,const std::list<Sequence>& left_part,const std::list<Sequence>& right_part,const mgf::Spectrum& Spectrum );
+            static void merge_solution(std::vector<Sequence>& finds,const std::list<Sequence>& left_part,const std::list<Sequence>& right_part,const mgf::Spectrum& Spectrum,int& status);
 
 
             /**

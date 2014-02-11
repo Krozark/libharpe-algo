@@ -8,6 +8,8 @@
 #include <harpe-algo/Context.hpp>
 #include <mgf/Analyse.hpp>
 
+#include <Monitoring/Physical.hpp>
+
 #define eq_error(value,to_find,error) (value >= (to_find - error) && value <= (to_find + error))
 
 namespace harpe
@@ -25,16 +27,18 @@ namespace harpe
         if (this->driver.isValid())
         {
             auto spectrums(ana.getSpectrums());
+            int status;
             for (mgf::Spectrum* spectrum : spectrums)
             {
-                this->analyse(*spectrum);
+                this->analyse(*spectrum,status);
             }
         }
     }
 
-    std::vector<harpe::Sequence> Analyser::analyse(const mgf::Spectrum& spectrum,int debut)
+    std::vector<harpe::Sequence> Analyser::analyse(const mgf::Spectrum& spectrum,int& status,int debut)
     {
         std::vector<Sequence> finds;// results
+        status = Status::Ok;
 
         const std::vector<int> peaks_index = debut>0?std::vector<int>(debut):get_index_max_intensitee_vector(spectrum,HARPE_ALGO_DEFAULT_START_PEAKS_NB);
 
@@ -138,7 +142,7 @@ namespace harpe
             __print__(results_left,std::cout);
             */
 
-            merge_solution(finds,results_left,results_right,spectrum);
+            merge_solution(finds,results_left,results_right,spectrum,status);
         }
 
         //std::cout<<"-- FINDS --"<<std::endl;
@@ -449,7 +453,7 @@ remove_1_peak_left:
         }
     }
 
-    void Analyser::merge_solution(std::vector<Sequence>& finds,const std::list<Sequence>& left_part,const std::list<Sequence>& right_part,const mgf::Spectrum& spectrum)
+    void Analyser::merge_solution(std::vector<Sequence>& finds,const std::list<Sequence>& left_part,const std::list<Sequence>& right_part,const mgf::Spectrum& spectrum,int& status)
     {
 
         auto l_end = left_part.end();
@@ -461,6 +465,8 @@ remove_1_peak_left:
         auto f = [](const Sequence& _1,const Sequence& _2){
             return _1.header.score>_2.header.score;
         };
+
+        double max_mem = (double)sys::memory::Physical::total() * 0.7; ///\todo TODO
 
         for(auto i=l_begin; i != l_end; ++i)
         {
@@ -503,11 +509,21 @@ remove_1_peak_left:
                                 finds.resize(Context::finds_max_size);
                                 _size = Context::finds_max_size;
                             }
+
+                            if (sys::memory::Physical::usedByProc() > max_mem)
+                            {
+                                std::cerr<<"too mush of the memory is used by this program. stop"<<std::endl;
+                                ///\todo set status to incomplet
+                                status = Status::MemoryError;
+                                goto end_merge;
+                            }
                         }
                     }
                 }
             }
         }
+
+end_merge:
         
         const auto& _begin = finds.begin();
         if(_size<Context::finds_max_size)

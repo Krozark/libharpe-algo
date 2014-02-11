@@ -1,6 +1,6 @@
 export CC = g++
 INCPATH = -I$(CURDIR)/include 
-LIBS = -lmgf -ldl
+LIBS = -lmgf -ldl -lmonitoring
 #-lpthread 
 #-lmysqlcppconn 
 export DEFINES = -DCOLORS 
