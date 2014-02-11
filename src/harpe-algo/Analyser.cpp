@@ -159,6 +159,8 @@ namespace harpe
         //std::cout<<"-- FINDS --"<<std::endl;
         //__print__(finds,std::cout);
 
+        sys::memory::Physical::close();
+
         return finds;
     }
 
