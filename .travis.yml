@@ -23,7 +23,7 @@ install:
     && cd ..
     && cd monitoring
     && sudo make install
-    && dc ..
+    && cd ..
     && ./build.sh
 
 language: cpp
