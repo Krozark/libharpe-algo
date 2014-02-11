@@ -7,6 +7,11 @@ before_install:
     && cd cpp-Socket
     && ./build.sh
     && cd ..
+    && git clone https://github.com/Krozark/monitoring
+    && cd monitoring
+    && ./build
+    && cd ..
+
 
 
 install: 
@@ -16,6 +21,9 @@ install:
     && cd cpp-Socket
     && sudo make install
     && cd ..
+    && cd monitoring
+    && sudo make install
+    && dc ..
     && ./build.sh
 
 language: cpp
