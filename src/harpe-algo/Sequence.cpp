@@ -109,8 +109,12 @@ namespace harpe
 
     void Sequence::initHeader(const mgf::Spectrum& spectrum)
     {
+        for(unsigned int i=0;i<Stats::SIZE;++i)
+            header.stats[i] = 0.f;
+
         header.stats[Stats::MASS_PARENT]=spectrum.getMass();
         header.stats[Stats::INTENSITEE_TOTAL_PARENT] += spectrum.getMeta().intensity_sum;
+
 
         auto i=sequence.begin();
         auto end = sequence.end();
