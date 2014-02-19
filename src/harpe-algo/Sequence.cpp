@@ -95,8 +95,13 @@ namespace harpe
 
     ntw::Serializer& operator<<(ntw::Serializer& stream,const Sequence& self)
     {
-        stream<<self.header.score
-            <<(unsigned int)self.sequence.size();
+        stream<<self.header.score;
+
+        for(unsigned int i=0;i<Sequence::Stats::SIZE;++i)
+            stream<<self.header.stats[i];
+
+        stream<<(unsigned int)self.sequence.size();
+
         for(SequenceToken* t : self.sequence)
             stream<<*t;
         return stream;
@@ -104,10 +109,8 @@ namespace harpe
 
     void Sequence::initHeader(const mgf::Spectrum& spectrum)
     {
-        double values[Stats::SIZE] = {0.f};
-
-        values[Stats::MASS_PARENT]=spectrum.getMass();
-        values[Stats::INTENSITEE_TOTAL_PARENT] += spectrum.getMeta().intensity_sum;
+        header.stats[Stats::MASS_PARENT]=spectrum.getMass();
+        header.stats[Stats::INTENSITEE_TOTAL_PARENT] += spectrum.getMeta().intensity_sum;
 
         auto i=sequence.begin();
         auto end = sequence.end();
@@ -118,27 +121,27 @@ namespace harpe
 
             if (ii.type == SequenceToken::Type::AA_TOKEN)
             {
-                ++values[Stats::NB_AA];
-                values[Stats::MASS_TOTAL] += Context::aa_tab[ii.aa_token.index].getMass();
+                ++header.stats[Stats::NB_AA];
+                header.stats[Stats::MASS_TOTAL] += Context::aa_tab[ii.aa_token.index].getMass();
 
-                values[Stats::ERROR_AA_CUMUL] += ABS(ii.aa_token.error);
-                values[Stats::ERROR_TOTAL] += ii.aa_token.error;
+                header.stats[Stats::ERROR_AA_CUMUL] += ABS(ii.aa_token.error);
+                header.stats[Stats::ERROR_TOTAL] += ii.aa_token.error;
             }
             if (ii.type == SequenceToken::Type::PEAK_TOKEN)
             {
-                ++values[Stats::NB_PEAKS];
+                ++header.stats[Stats::NB_PEAKS];
                 mgf::Peak* p = ii.peak_token.pt_data;
-                values[Stats::INTENSITEE_TOTAL] += p->getIntensity();
+                header.stats[Stats::INTENSITEE_TOTAL] += p->getIntensity();
                 if ( spectrum.is_one_of_h2o(p))
-                    values[Stats::MASS_TOTAL] += mgf::Convert::MH2O;
+                    header.stats[Stats::MASS_TOTAL] += mgf::Convert::MH2O;
             }
             ++i;
         }
 
-        values[Stats::PERCENT_COUVERTURE] = values[Stats::MASS_TOTAL] / values[Stats::MASS_PARENT];
-        values[Stats::PERCENT_INTENSITEE_UTILISEE] = values[Stats::INTENSITEE_TOTAL] /100.0 * values[Stats::INTENSITEE_TOTAL_PARENT];
+        header.stats[Stats::PERCENT_COUVERTURE] = header.stats[Stats::MASS_TOTAL] / header.stats[Stats::MASS_PARENT];
+        header.stats[Stats::PERCENT_INTENSITEE_UTILISEE] = header.stats[Stats::INTENSITEE_TOTAL] /100.0 * header.stats[Stats::INTENSITEE_TOTAL_PARENT];
 
-        header.score = Context::calc_score(values);
+        header.score = Context::calc_score(header.stats);
 
     }
 }

@@ -34,24 +34,12 @@ namespace harpe
 
             /**
              * \brief store the Sequence
+             * double score,
+             * double stats[Stats::SIZE],
+             * unsigned int size,
+             * SequenceToken[size]
              */
             friend ntw::Serializer& operator<<(ntw::Serializer& stream,const Sequence& self);
-
-        private:
-            friend class Analyser;
-
-            std::vector<SequenceToken*> sequence;///< the sequence
-
-            /**
-             * \brief store the meta datas
-             */
-            struct Header {
-                double score;
-                /*struct _holds {
-                    std::shared_ptr<std::list<list_arg> > link;
-                    double to_find;
-                } holds [Parser::peptide::SIZE];*/
-            } header;
 
             /**
              * \brief Enum for stats of a Sequence
@@ -70,6 +58,24 @@ namespace harpe
                 PERCENT_INTENSITEE_UTILISEE,///< INTENSITEE_TOTAL /100 * INTENSITEE_TOTAL_PARENT  
                 SIZE ///< Nombre de valeurs
             };            
+
+        private:
+            friend class Analyser;
+
+            std::vector<SequenceToken*> sequence;///< the sequence
+
+            /**
+             * \brief store the meta datas
+             */
+            struct Header {
+                double score; ///< store the score
+                double stats[Stats::SIZE]; ///< store all the stats for score calc
+                /*struct _holds {
+                    std::shared_ptr<std::list<list_arg> > link;
+                    double to_find;
+                } holds [Parser::peptide::SIZE];*/
+            } header;
+
             
             /**
              * \brief inialyse the header of a Sequence (stats valus)
