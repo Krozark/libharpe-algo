@@ -62,6 +62,7 @@ namespace harpe
             
             double max_mem = (double)sys::memory::Physical::total() * 0.55; ///\todo TODO
 
+
             while (sens)
             {
                 mgf::Peak* current_peak = peaks[current_peak_index];
@@ -111,7 +112,7 @@ namespace harpe
                             search.emplace_back(&tmp_find_last); //AA
                             search.emplace_back(current_stack_peak); //PEAK
 
-                            save_stack(search,spectrum,results_right);
+                            save_stack_right(search,spectrum,results_right);
                         }break;
                         case Sens::LEFT :
                         {
@@ -129,7 +130,7 @@ namespace harpe
 
                             search.emplace_front(current_stack_peak); //PEAK
 
-                            save_stack(search,spectrum,results_left);
+                            save_stack_left(search,spectrum,results_left);
                         }break;
                         default:
                             HARPE_ALGO_ERROR("Unknow sens variable value")
@@ -403,18 +404,11 @@ remove_1_peak_left:
     }
 
 
-    void Analyser::save_stack(const pile_tokens_ptr& search,const mgf::Spectrum& spectrum,std::list<Sequence>& res)
+    void Analyser::save_stack_right(const pile_tokens_ptr& search,const mgf::Spectrum& spectrum,std::list<Sequence>& res)
     {
         Sequence sequence;
         auto i=search.begin();
         auto end = search.end();
-
-        /*int nb=0;
-        double mass = 0;
-        double intensitee = spectrum.getHeader().getIntensity();
-        double errors = 0;
-        double error_tot = 0;
-        */
 
         while(i!=end)
         {
@@ -423,20 +417,10 @@ remove_1_peak_left:
             if (tmp_i.type == SequenceToken::Type::PEAK_TOKEN)
             {
                 sequence.sequence.emplace_back(&tmp_i);
-                /*Parser::peptide::peak* p = tmp_i.peak_token.pt_data;
-                intensitee += p->intensitee;
-                if ( pep->is_one_of_h2o(p))
-                    mass += MH2O;
-                */
             }
             else if (tmp_i.type == SequenceToken::Type::AA_TOKEN and tmp_i.aa_token.pt_data==NULL)
             {
                 sequence.sequence.emplace_back(&tmp_i);
-                /*errors += ABS(tmp_i.aa_token.error);
-                error_tot += tmp_i.aa_token.error;
-                mass += aa_tab[tmp_i.aa_token.index].mass;
-                ++nb;
-                */
             }
             ++i;
         }
@@ -446,6 +430,7 @@ remove_1_peak_left:
         --i;//go to aa
         --i;//go to head? or peak
         end = search.begin();//decrement
+
         //add all other possibilites tha can be (or not) complete
         const int size =sequence.sequence.size();
         while(i!=end)
@@ -460,9 +445,58 @@ remove_1_peak_left:
             {
                 sequence.sequence[size-2] = &tmp_i;
                 sequence.sequence[size-1] = tmp_i.aa_token.pt_data;
+
+
                 res.emplace_back(sequence);
             }
             --i;
+        }
+    }
+
+    void Analyser::save_stack_left(const pile_tokens_ptr& search,const mgf::Spectrum& spectrum,std::list<Sequence>& res)
+    {
+        Sequence sequence;
+        auto i=search.begin();
+        auto end = search.end();
+
+        while(i!=end)
+        {
+            SequenceToken& tmp_i= **i;
+
+            if (tmp_i.type == SequenceToken::Type::PEAK_TOKEN)
+            {
+                sequence.sequence.emplace_back(&tmp_i);
+            }
+            else if (tmp_i.type == SequenceToken::Type::AA_TOKEN and tmp_i.aa_token.pt_data==NULL)
+            {
+                sequence.sequence.emplace_back(&tmp_i);
+            }
+            ++i;
+        }
+        sequence.sequence.shrink_to_fit();
+        //add the current
+        res.emplace_back(sequence);
+
+        i = search.begin();//decrement
+        ++i;//go to aa
+
+        //add all other possibilites tha can be (or not) complete
+        while(i!=end)
+        {
+            SequenceToken& tmp_i= **i;
+
+            if(tmp_i.type == SequenceToken::Type::PEAK_TOKEN)
+            {
+                break;
+            }
+            else if (tmp_i.type == SequenceToken::Type::AA_TOKEN and tmp_i.aa_token.pt_data!=NULL)
+            {
+                sequence.sequence[0] = tmp_i.aa_token.pt_data;
+                sequence.sequence[1] = &tmp_i;
+
+                res.emplace_back(sequence);
+            }
+            ++i;
         }
     }
 
@@ -535,11 +569,11 @@ remove_1_peak_left:
                         //i_0.header_token.holds[Parser::peptide::FIN].link = j_0.header_token.holds[Parser::peptide::FIN].link;
                         //i_0.header_token.holds[Parser::peptide::FIN].to_find = j_0.header_token.holds[Parser::peptide::FIN].to_find;
                         //ajout du noyeau (header-peak(en commun)-[AA -peak]* )
-                        copy(ii.sequence.begin(),ii.sequence.end(),back_inserter(new_seq.sequence)); 
-                        copy(jj.sequence.begin()+1,jj.sequence.end(),back_inserter(new_seq.sequence)); 
+                        copy(ii.sequence.begin(),ii.sequence.end()-1,back_inserter(new_seq.sequence)); 
+                        copy(jj.sequence.begin(),jj.sequence.end(),back_inserter(new_seq.sequence)); 
                         //ajout du nouveau
                         new_seq.initHeader(spectrum);
-                        
+
                         ///////////////////////////////////////////
 
                         if(_size < Context::finds_max_size or new_seq.header.score > finds[_size-1].header.score)
@@ -592,15 +626,6 @@ end_merge:
 
 
     void Analyser::__print__(const std::list<Sequence>& sequences,std::ostream& stream)
-    {
-        for(const Sequence& seq : sequences)
-        {
-            seq.__print_AA__(stream);
-            stream<<std::endl;
-        }
-    }
-
-    void Analyser::__print__(const std::vector<Sequence>& sequences,std::ostream& stream)
     {
         for(const Sequence& seq : sequences)
         {

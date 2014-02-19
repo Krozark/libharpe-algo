@@ -34,8 +34,6 @@ namespace harpe
 
             /**
              * \brief analyse all the MS/MS spectrum in the parsed input, and try to build the Sequence
-             * \param s the spectrum to analyse
-             * \param status the status of the analyse. \see Status.
              */
             static std::vector<harpe::Sequence> analyse(const mgf::Spectrum& s,int& status,int debut=-1);
 
@@ -44,7 +42,8 @@ namespace harpe
                 Ok = 1, ///< no problem [default]
                 Timeout =2, ///< more time is needed to finish
                 MemoryError = 3 //< Too much memory needed to finish the analyse
-            };
+            };            
+
 
             /**
              * \brief free all the alocated memory
@@ -88,7 +87,15 @@ namespace harpe
              * \param spectrum the spectum associated
              * \param res Where the Sequence is added
              */
-            static void save_stack(const pile_tokens_ptr& search,const mgf::Spectrum& spectrum,std::list<Sequence>& res);
+            static void save_stack_right(const pile_tokens_ptr& search,const mgf::Spectrum& spectrum,std::list<Sequence>& res);
+
+            /**
+             * \brief save the Sequence in the stack
+             * \param search the stack to save
+             * \param spectrum the spectum associated
+             * \param res Where the Sequence is added
+             */
+            static void save_stack_left(const pile_tokens_ptr& search,const mgf::Spectrum& spectrum,std::list<Sequence>& res);
 
             /**
              * \brief Merge two list of sequences of différente analyse direction strating from the same peak
@@ -96,7 +103,6 @@ namespace harpe
              * \param left_part the left sequences part
              * \param right_part the right part Sequence
              * \param spectrum the related spectrum
-             * \param status the status of the analyse. \see Status.
              */
             static void merge_solution(std::vector<Sequence>& finds,const std::list<Sequence>& left_part,const std::list<Sequence>& right_part,const mgf::Spectrum& Spectrum,int& status);
 
@@ -111,11 +117,6 @@ namespace harpe
              */
             static void __print__(const std::list<Sequence>&,std::ostream& stream);
 
-            /**
-             * \brief Debug print
-             */
-            static void __print__(const std::vector<Sequence>&,std::ostream& stream);
-            
             
         private:
             mgf::Driver driver; ///< the driver for the analyse (parser)
