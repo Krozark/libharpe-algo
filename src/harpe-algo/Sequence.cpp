@@ -143,7 +143,7 @@ namespace harpe
         }
 
         header.stats[Stats::PERCENT_COUVERTURE] = header.stats[Stats::MASS_TOTAL] / header.stats[Stats::MASS_PARENT];
-        header.stats[Stats::PERCENT_INTENSITEE_UTILISEE] = header.stats[Stats::INTENSITEE_TOTAL] /100.0 * header.stats[Stats::INTENSITEE_TOTAL_PARENT];
+        header.stats[Stats::PERCENT_INTENSITEE_UTILISEE] = header.stats[Stats::INTENSITEE_TOTAL] / header.stats[Stats::INTENSITEE_TOTAL_PARENT];
 
         header.score = Context::calc_score(header.stats);
 
