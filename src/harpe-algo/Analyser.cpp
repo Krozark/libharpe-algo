@@ -47,6 +47,8 @@ namespace harpe
         const unsigned int index_size=peaks_index.size();
         const std::vector<mgf::Peak*>& peaks = spectrum.getPeaks();
 
+        double max_mem = (double)sys::memory::Physical::total() * 0.50; ///\todo TODO
+
         for(unsigned int index=0;index<index_size;++index)
         {
             register int current_peak_index = peaks_index[index];
@@ -60,7 +62,6 @@ namespace harpe
             tokens_ptr.emplace_back(new SequenceToken(current_peak_index,peaks[current_peak_index]));
             search.emplace_back(tokens_ptr.back());
             
-            double max_mem = (double)sys::memory::Physical::total() * 0.55; ///\todo TODO
 
 
             while (sens)
@@ -70,6 +71,8 @@ namespace harpe
 
                 std::vector<SequenceToken*> near=get_near(peaks,current_peak_index,sens);
                 const int size_near = near.size();
+
+
                 if(size_near<=0)
                 {
                     current_peak_index = pop_stack(search,sens);
@@ -133,16 +136,16 @@ namespace harpe
                             save_stack_left(search,spectrum,results_left);
                         }break;
                         default:
-                            HARPE_ALGO_ERROR("Unknow sens variable value")
-                                break;
+                        {
+                            HARPE_ALGO_ERROR("Unknow sens variable value");
+                        }break;
 
-                    }
-
-                    if (sys::memory::Physical::usedByProc() > max_mem)
-                    {
-                        HARPE_ALGO_WARNNIG("out of memory")
-                        status = Status::MemoryError;
-                        sens = Sens::STOP;
+                        if (status == Status::MemoryError or sys::memory::Physical::usedByProc() > max_mem)
+                        {
+                            HARPE_ALGO_WARNNIG("out of memory");
+                            status = Status::MemoryError;
+                            goto merge;
+                        }
                     }
                 }
             }
@@ -153,15 +156,12 @@ namespace harpe
             std::cout<<"-- LEFT --"<<std::endl;
             __print__(results_left,std::cout);
             */
-
+merge:
             merge_solution(finds,results_left,results_right,spectrum,status);
         }
 
         //std::cout<<"-- FINDS --"<<std::endl;
         //__print__(finds,std::cout);
-
-        sys::memory::Physical::close();
-
         return finds;
     }
 
@@ -427,14 +427,16 @@ remove_1_peak_left:
         sequence.sequence.shrink_to_fit();
         //add the current
         res.emplace_back(sequence);
-        --i;//go to aa
-        --i;//go to head? or peak
-        end = search.begin();//decrement
 
         //add all other possibilites tha can be (or not) complete
         const int size =sequence.sequence.size();
+
+        --i;//go to aa
+        --i;//go to head? or peak
+        end = search.begin();//decrement
         while(i!=end)
         {
+
             SequenceToken& tmp_i= **i;
 
             if(tmp_i.type == SequenceToken::Type::PEAK_TOKEN)
@@ -546,7 +548,7 @@ remove_1_peak_left:
             }
         }
 
-        double max_mem = (double)sys::memory::Physical::total() * 0.7; ///\todo TODO
+        double max_mem = (double)sys::memory::Physical::total() * 0.70; ///\todo TODO
 
         for(auto i=l_begin; i != l_end; ++i)
         {
