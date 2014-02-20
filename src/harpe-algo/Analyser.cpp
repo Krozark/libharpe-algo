@@ -140,12 +140,12 @@ namespace harpe
                             HARPE_ALGO_ERROR("Unknow sens variable value");
                         }break;
 
-                        if (status == Status::MemoryError or sys::memory::Physical::usedByProc() > max_mem)
-                        {
-                            HARPE_ALGO_WARNNIG("out of memory");
-                            status = Status::MemoryError;
-                            goto merge;
-                        }
+                    }
+                    if (sys::memory::Physical::usedByProc() > max_mem)
+                    {
+                        HARPE_ALGO_WARNNIG("out of memory");
+                        status = Status::MemoryError;
+                        goto merge;
                     }
                 }
             }
