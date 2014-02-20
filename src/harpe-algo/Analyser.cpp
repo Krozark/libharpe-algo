@@ -47,7 +47,7 @@ namespace harpe
         const unsigned int index_size=peaks_index.size();
         const std::vector<mgf::Peak*>& peaks = spectrum.getPeaks();
 
-        double max_mem = (double)sys::memory::Physical::total() * 0.50; ///\todo TODO
+        const double max_mem = (double)sys::memory::Physical::total() * 0.10; ///\todo TODO
 
         for(unsigned int index=0;index<index_size;++index)
         {
@@ -145,7 +145,7 @@ namespace harpe
                     {
                         HARPE_ALGO_WARNNIG("out of memory");
                         status = Status::MemoryError;
-                        goto merge;
+                        sens = Sens::STOP;
                     }
                 }
             }
@@ -156,7 +156,6 @@ namespace harpe
             std::cout<<"-- LEFT --"<<std::endl;
             __print__(results_left,std::cout);
             */
-merge:
             merge_solution(finds,results_left,results_right,spectrum,status);
         }
 
@@ -548,14 +547,18 @@ remove_1_peak_left:
             }
         }
 
-        double max_mem = (double)sys::memory::Physical::total() * 0.70; ///\todo TODO
+        std::cout<<"left_part.size(): "<<left_part.size()<<" right_part.size():"<<right_part.size()<<std::endl;
 
-        for(auto i=l_begin; i != l_end; ++i)
+        const double max_mem = (double)sys::memory::Physical::total() * 0.20; ///\todo TODO
+
+        bool ok= true;
+
+        for(auto i=l_begin; i != l_end and ok; ++i)
         {
             if(i->sequence.size() > 1) //il y a au moins 1 AA
             {
                 auto& ii = *i;
-                for(auto j=r_begin; j!= r_end; ++j)
+                for(auto j=r_begin; j!= r_end and ok; ++j)
                 {
                     if(j->sequence.size() > 1) //il y a au moins 1 AA
                     {
@@ -596,7 +599,7 @@ remove_1_peak_left:
                             {
                                 HARPE_ALGO_WARNNIG("out of memory");
                                 status = Status::MemoryError;
-                                goto end_merge;
+                                ok = false;
                             }
                         }
                     }
