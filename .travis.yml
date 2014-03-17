@@ -2,29 +2,23 @@ before_install:
     git clone git://github.com/Krozark/libmgf.git
     && cd libmgf
     && cmake .
+    && sudo make install
     && cd ..
     && git clone https://github.com/Krozark/cpp-Socket
     && cd cpp-Socket
     && cmake .
+    && sudo make install
     && cd ..
     && git clone https://github.com/Krozark/monitoring
     && cd monitoring
     && cmake .
+    && sudo make install
     && cd ..
 
 
 
 install: 
-    cd libmgf 
-    && sudo make install
-    && cd ..
-    && cd cpp-Socket
-    && sudo make install
-    && cd ..
-    && cd monitoring
-    && sudo make install
-    && cd ..
-    && ./build.sh
+    ./build.sh
     && make exe
 
 language: cpp
