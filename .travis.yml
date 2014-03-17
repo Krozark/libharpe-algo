@@ -1,15 +1,15 @@
 before_install:
     git clone git://github.com/Krozark/libmgf.git
     && cd libmgf
-    && ./build.sh
+    && cmake .
     && cd ..
     && git clone https://github.com/Krozark/cpp-Socket
     && cd cpp-Socket
-    && ./build.sh
+    && cmake.
     && cd ..
     && git clone https://github.com/Krozark/monitoring
     && cd monitoring
-    && ./build.sh
+    && cmake .
     && cd ..
 
 
