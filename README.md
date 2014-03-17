@@ -19,11 +19,10 @@ Requirement
 Instalation
 =============
 
-    ./build.sh
-    sudo make install
+Use cmake to build the lib
 
 
-if you want to build the exe
+Usage
+=====
 
-    make exe
-
+You can find examples in the examples directory.
