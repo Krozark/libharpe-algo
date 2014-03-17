@@ -5,6 +5,15 @@
 #include <harpe-algo/Analyser.hpp>
 #include <harpe-algo/Context.hpp>
 
+namespace ntw
+{
+    class SocketSerialized;
+
+    void dispatch(int id,SocketSerialized& request)
+    {
+    };
+}
+
 int main(int argc,char* argv[])
 {
     if (not harpe::Context::loadFromLib("./calc_score.so"))
@@ -44,10 +53,12 @@ int main(int argc,char* argv[])
 
         mgf::Driver driver(file);
         mgf::Spectrum* spectrum = nullptr;
+        int status = 0;
         while((spectrum = driver.next()) != nullptr)
         {
             spectrum->__print__(std::cout);
-            std::vector<harpe::Sequence> res = harpe::Analyser::analyse(*spectrum,-1);
+            std::vector<harpe::Sequence> res = harpe::Analyser::analyse(*spectrum,status,-1);
+            std::cout<<"status: "<<status<<std::endl;
             harpe::Analyser::free();
             delete spectrum;
         }
