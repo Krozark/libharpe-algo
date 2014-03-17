@@ -9,11 +9,11 @@ Main Harpe algorithm
 Requirement
 ===========
 
-libdl
-libmgf : https://github.com/Krozark/libmgf
-cppsocket (headers only) :  https://github.com/Krozark/cpp-Socket
-libmonitoring : https://github.com/Krozark/monitoring
-libharpe-sort.[so/dll] : https://github.com/Krozark/Harpe-sort
+* libdl
+* libmgf : https://github.com/Krozark/libmgf
+* cppsocket (headers only) :  https://github.com/Krozark/cpp-Socket
+* libmonitoring : https://github.com/Krozark/monitoring
+* libharpe-sort.[so/dll] : https://github.com/Krozark/Harpe-sort
 
 
 Instalation
