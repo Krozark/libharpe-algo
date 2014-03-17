@@ -25,6 +25,7 @@ install:
     && sudo make install
     && cd ..
     && ./build.sh
+    && make exe
 
 language: cpp
 
