@@ -5,7 +5,7 @@ before_install:
     && cd ..
     && git clone https://github.com/Krozark/cpp-Socket
     && cd cpp-Socket
-    && cmake.
+    && cmake .
     && cd ..
     && git clone https://github.com/Krozark/monitoring
     && cd monitoring
