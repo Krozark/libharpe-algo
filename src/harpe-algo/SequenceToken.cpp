@@ -42,6 +42,7 @@ namespace harpe
 
             default : break;
         }
+        return *this;
     }
 
     SequenceToken::SequenceToken(SequenceToken&& tmp)

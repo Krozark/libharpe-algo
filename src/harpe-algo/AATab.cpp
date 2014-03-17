@@ -23,7 +23,7 @@ namespace harpe
     void AATab::__print__(std::ostream& stream)const
     {
         const unsigned int size = AAs.size();
-        for(int i=0;i<size;++i)
+        for(unsigned int i=0;i<size;++i)
             AAs[i].__print__(stream);
     }
 }

@@ -23,6 +23,7 @@ namespace harpe
 
     int Analyser::analyse()
     {
+        int res = 0;
         mgf::Analyse ana = this->driver.parse();
         if (this->driver.isValid())
         {
@@ -31,8 +32,10 @@ namespace harpe
             for (mgf::Spectrum* spectrum : spectrums)
             {
                 this->analyse(*spectrum,status);
+                ++res;
             }
         }
+        return res;
     }
 
 
@@ -172,11 +175,11 @@ namespace harpe
         tokens_ptr.clear();
     }
 
-    const std::vector<int> Analyser::get_index_max_intensitee_vector(const mgf::Spectrum& spectrum,const int nb)
+    const std::vector<int> Analyser::get_index_max_intensitee_vector(const mgf::Spectrum& spectrum,const unsigned int nb)
     {
         std::vector<int> res;
         std::vector<mgf::Peak*> res_peaks;
-        int size_nb;
+        unsigned int size_nb;
         {
             std::vector<mgf::Peak*> peaks(spectrum.getPeaks());
 
@@ -200,23 +203,23 @@ namespace harpe
             res_peaks.reserve(size_nb);
             res.reserve(size_nb);
 
-            for (int i=0;i<size_nb;++i)
+            for (unsigned int i=0;i<size_nb;++i)
                 res_peaks.push_back(peaks[i]);
 
         }
 
         const std::vector<mgf::Peak*>& peaks = spectrum.getPeaks();
         const unsigned int size = peaks.size();
-        int finds=0;
-        for (int i=0;i<size_nb;++i)//pour tous les peaks à trouver
+        unsigned int finds=0;
+        for (unsigned int i=0;i<size_nb;++i)//pour tous les peaks à trouver
         {
-            for(int j=0;j<size;++j)
+            for(unsigned int j=0;j<size;++j)
             {
                 if(res_peaks[i] == peaks[j])
                 {
                     res.push_back(j);
                     if(peaks[j]->isOriginal())
-                        if(++finds >=nb)
+                        if(++finds >= nb)
                             goto end_loop;
                     break;
                 }
@@ -606,7 +609,6 @@ remove_1_peak_left:
                 }
             }
         }
-end_merge:
         
         const auto& _begin = finds.begin();
         if(_size<Context::finds_max_size)

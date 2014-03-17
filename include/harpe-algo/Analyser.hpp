@@ -62,7 +62,7 @@ namespace harpe
              * \param nb the number of peak to return
              * \return the peak index list in the spectrum
              */
-            static const std::vector<int> get_index_max_intensitee_vector(const mgf::Spectrum& spectrum,const int nb);
+            static const std::vector<int> get_index_max_intensitee_vector(const mgf::Spectrum& spectrum,const unsigned int nb);
 
             /**
              * \brief Get a list of SequenceToken near the peak index in param
