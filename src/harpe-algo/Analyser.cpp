@@ -550,7 +550,6 @@ remove_1_peak_left:
             }
         }
 
-        std::cout<<"left_part.size(): "<<left_part.size()<<" right_part.size():"<<right_part.size()<<std::endl;
 
         const double max_mem = (double)sys::memory::Physical::total() * 0.60; ///\todo TODO
 
