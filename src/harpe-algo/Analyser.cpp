@@ -146,7 +146,7 @@ namespace harpe
                     }
                     if (sys::memory::Physical::usedByProc() > max_mem)
                     {
-                        HARPE_ALGO_WARNNIG("out of memory");
+                        HARPE_ALGO_WARNNIG("out of memory(analyse)");
                         status = Status::MemoryError;
                         sens = Sens::STOP;
                     }
@@ -600,7 +600,7 @@ remove_1_peak_left:
 
                             if (sys::memory::Physical::usedByProc() > max_mem)
                             {
-                                HARPE_ALGO_WARNNIG("out of memory");
+                                HARPE_ALGO_WARNNIG("out of memory(merge)");
                                 status = Status::MemoryError;
                                 ok = false;
                             }
