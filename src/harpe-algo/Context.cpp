@@ -9,6 +9,7 @@ namespace harpe
 {
     AATab Context::aa_tab;
     double Context::error=0.05;
+    int Context::max_charge = 0;
     unsigned int Context::finds_max_size=1000;
     unsigned int Context::finds_max_size_tmp=1000*5;
     Context::Alias Context::alias;

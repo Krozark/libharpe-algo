@@ -24,7 +24,7 @@ namespace harpe
     int Analyser::analyse()
     {
         int res = 0;
-        mgf::Analyse ana = this->driver.parse();
+        mgf::Analyse ana = this->driver.parse(Context::max_charge);
         if (this->driver.isValid())
         {
             auto spectrums(ana.getSpectrums());

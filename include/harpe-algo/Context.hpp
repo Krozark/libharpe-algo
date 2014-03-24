@@ -46,6 +46,7 @@ namespace harpe
 
             static AATab aa_tab; ///< the table of AAs
             static double error; ///< the maximum error (in Daltons)
+            static int max_charge; ///< the max charge of the fragments ions
             static unsigned int finds_max_size; ///< the max number of Sequence to store [defined is 1000]
             static unsigned int finds_max_size_tmp; ///< the max number of Sequence to store during the algorithm (have to be greater tha finds_max_size [default is 5000])
 
