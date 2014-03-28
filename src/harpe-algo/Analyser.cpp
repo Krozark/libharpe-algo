@@ -14,7 +14,7 @@
 
 namespace harpe
 {
-    
+
     std::vector<SequenceToken*> Analyser::tokens_ptr;
 
     Analyser::Analyser(std::istream& input) : driver(input)
@@ -64,7 +64,7 @@ namespace harpe
 
             tokens_ptr.emplace_back(new SequenceToken(current_peak_index,peaks[current_peak_index]));
             search.emplace_back(tokens_ptr.back());
-            
+
 
 
             while (sens)
@@ -72,8 +72,8 @@ namespace harpe
                 mgf::Peak* current_peak = peaks[current_peak_index];
                 current_peak->setUsed(true);
 
-                std::vector<SequenceToken*> near=get_near(peaks,current_peak_index,sens);
-                const int size_near = near.size();
+                std::vector<SequenceToken*> _near=get_near(peaks,current_peak_index,sens);
+                const int size_near = _near.size();
 
 
                 if(size_near<=0)
@@ -84,7 +84,7 @@ namespace harpe
                     {
                         switch(sens)
                         {
-                            case Sens::RIGHT : 
+                            case Sens::RIGHT :
                             {
                                 sens = Sens::LEFT;
                                 current_peak_index = search.front()->peak_token.index;
@@ -96,7 +96,7 @@ namespace harpe
                             default:
                                 HARPE_ALGO_ERROR("Unknow sens variable value")
                             break;
-                            
+
                         }
                     }
                 }
@@ -104,14 +104,14 @@ namespace harpe
                 {
                     switch(sens)
                     {
-                        case Sens::RIGHT : 
+                        case Sens::RIGHT :
                         {
                             for (int i=0;i<size_near-1;++i)
                             {
-                                search.emplace_back(near[i]);
+                                search.emplace_back(_near[i]);
                             }
 
-                            auto& tmp_find_last = *near[size_near-1];
+                            auto& tmp_find_last = *_near[size_near-1];
                             SequenceToken* current_stack_peak = tmp_find_last.get_peak_stack_NULL();
 
                             current_peak_index = (current_stack_peak->peak_token.index);
@@ -122,7 +122,7 @@ namespace harpe
                         }break;
                         case Sens::LEFT :
                         {
-                            auto& tmp_find_last = *near[size_near-1];
+                            auto& tmp_find_last = *_near[size_near-1];
 
                             SequenceToken* current_stack_peak = tmp_find_last.get_peak_stack_NULL();
 
@@ -131,7 +131,7 @@ namespace harpe
 
                             for (int i=size_near-2;i>=0;--i)
                             {
-                                search.emplace_front(near[i]);
+                                search.emplace_front(_near[i]);
                             }
 
                             search.emplace_front(current_stack_peak); //PEAK
@@ -295,7 +295,7 @@ namespace harpe
                 }
             }
         }
-            
+
         return res;
     }
 
@@ -401,7 +401,7 @@ remove_1_peak_left:
                 current_peak_index = token->peak_token.index;
             }
         }
-    end: 
+    end:
         return current_peak_index;
     }
 
@@ -576,8 +576,8 @@ remove_1_peak_left:
                         //i_0.header_token.holds[Parser::peptide::FIN].link = j_0.header_token.holds[Parser::peptide::FIN].link;
                         //i_0.header_token.holds[Parser::peptide::FIN].to_find = j_0.header_token.holds[Parser::peptide::FIN].to_find;
                         //ajout du noyeau (header-peak(en commun)-[AA -peak]* )
-                        copy(ii.sequence.begin(),ii.sequence.end()-1,back_inserter(new_seq.sequence)); 
-                        copy(jj.sequence.begin(),jj.sequence.end(),back_inserter(new_seq.sequence)); 
+                        copy(ii.sequence.begin(),ii.sequence.end()-1,back_inserter(new_seq.sequence));
+                        copy(jj.sequence.begin(),jj.sequence.end(),back_inserter(new_seq.sequence));
                         //ajout du nouveau
                         new_seq.initHeader(spectrum);
 
@@ -608,7 +608,7 @@ remove_1_peak_left:
                 }
             }
         }
-        
+
         const auto& _begin = finds.begin();
         if(_size<Context::finds_max_size)
         {
