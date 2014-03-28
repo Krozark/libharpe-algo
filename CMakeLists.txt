@@ -24,7 +24,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 #set_option(BUILD_SHARED_LIBS FALSE BOOL "TRUE to build as shared libraries, FALSE to build it as static libraries")
 
 # add an option for building the examples
-set_option(BUILD_EXAMPLES FALSE BOOL "TRUE to build the examples, FALSE to ignore them")
+set_option(BUILD_EXAMPLES TRUE BOOL "TRUE to build the examples, FALSE to ignore them")
 
 # add an option for building the API documentation
 set_option(BUILD_DOC TRUE BOOL "TRUE to generate the API documentation, FALSE to ignore it")
@@ -33,15 +33,36 @@ set_option(BUILD_DOC TRUE BOOL "TRUE to generate the API documentation, FALSE to
 #set(includepath "-I${CMAKE_CURRENT_SOURCE_DIR}/include")
 set(DEFINES "")
 
-set(LIBS "")
+if(${WIN32})
+    find_library(PDH_LIB pdh)
+    find_library(PSAPI_LIB psapi)
+    find_library(PTHREAD_LIBS "winpthread-1")
+	find_library(SOCKET_LIBS ws2_32)
+    find_library(KERNEL_LIBS kernel32)
+    set(LIBS ${PDH_LIB} ${PSAPI_LIB} ${PTHREAD_LIBS} ${SOCKET_LIBS} ${KERNEL_LIBS})
+else()
+    find_library(PTHREAD_LIBS pthread)
+    find_library(DL_LIB dl)
+    set(LIBS ${PTHREAD_LIBS} ${DL_LIB})
+endif()
+#common libs
+#find_library(MYSQL_LIB mysqlcppconn)
+#find_library(SQLITE_LIB sqlite3)
+#find_library(ORM_LIB orm)
+#set(LIBS ${LIBS} ${MYSQL_LIB} ${SQLITE_LIB} ${ORM_LIB} ${MGF_LIB})
+find_library(MGF_LIB mgf)
+find_library(SOCKET_LIB socket)
+find_library(MONITORING_LIB monitoring)
+set(LIBS ${LIBS} ${MGF_LIB} ${SOCKET_LIB} ${MONITORING_LIB})
 
 set(WARNING "-Wall")
 set(FLAGS "-o3 -std=c++0x")
-set(CMAKE_CXX_FLAGS "${DEFINES} ${WARNING} ${FLAGS} ${LIBS}")
+set(CMAKE_CXX_FLAGS "${DEFINES} ${WARNING} ${FLAGS}")
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 set(LIB_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib)
+set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/examples)
 
 # add the subdirectories
 add_subdirectory(src/${CMAKE_PROJECT_NAME})
