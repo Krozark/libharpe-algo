@@ -41,6 +41,12 @@ namespace harpe
              */
             friend ntw::Serializer& operator<<(ntw::Serializer& stream,const Sequence& self);
 
+
+            /**
+             * \return a string as <AA slug>-<AA slug> ...
+             */
+            std::string to_string()const;
+
             /**
              * \brief Enum for stats of a Sequence
              */
@@ -59,11 +65,6 @@ namespace harpe
                 SIZE ///< Nombre de valeurs
             };            
 
-        private:
-            friend class Analyser;
-
-            std::vector<SequenceToken*> sequence;///< the sequence
-
             /**
              * \brief store the meta datas
              */
@@ -74,8 +75,16 @@ namespace harpe
                     std::shared_ptr<std::list<list_arg> > link;
                     double to_find;
                 } holds [Parser::peptide::SIZE];*/
-            } header;
+            };
+            
+            const Header& getHeader()const;
 
+        private:
+            friend class Analyser;
+
+            std::vector<SequenceToken*> sequence;///< the sequence
+
+            Header header;
             
             /**
              * \brief inialyse the header of a Sequence (stats valus)

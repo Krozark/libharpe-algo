@@ -32,7 +32,7 @@ namespace harpe
         }
         else
         {
-            alias.obj = GetProcAddress(lib,"calc_score");
+            alias.obj = (void*)GetProcAddress(lib,"calc_score");
             if (alias.obj == nullptr)
             {
                 HARPE_ALGO_ERROR("Enable to find calc_score() in "<<libname);
@@ -42,7 +42,7 @@ namespace harpe
                 res = true;
             }
         }
-        #elif __linux //|| __unix //or __APPLE__ 
+        #elif __linux //|| __unix //or __APPLE__
         lib = dlopen(libname.c_str(), RTLD_LAZY);
         if (lib == nullptr)
         {

@@ -2,8 +2,7 @@
 *.slo
 *.lo
 *.o
-main
-*.exe
+
 
 # Compiled Dynamic libraries
 *.so
@@ -11,7 +10,6 @@ main
 # Compiled Static libraries
 *.lai
 *.la
-*.a
 
 #python
 *.log
@@ -25,3 +23,7 @@ trunk/mgf/
 !file_test.mgf
 *.arp
 *.vim
+build
+lib
+/examples/libharpe-algo.dll
+/examples/basic.exe

@@ -14,7 +14,7 @@ project (harpe-algo)
 # setup version numbers
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 8)
-set(VERSION_PATCH 3)
+set(VERSION_PATCH 5)
 
 
 # add the  header path
@@ -28,6 +28,8 @@ set_option(BUILD_EXAMPLES TRUE BOOL "TRUE to build the examples, FALSE to ignore
 
 # add an option for building the API documentation
 set_option(BUILD_DOC TRUE BOOL "TRUE to generate the API documentation, FALSE to ignore it")
+
+set_option(BUILD_GENARATOR FALSE BOOL "TRUE to generate the generator lib, FALSE to ignore it")
 
 
 #set(includepath "-I${CMAKE_CURRENT_SOURCE_DIR}/include")
@@ -52,7 +54,7 @@ endif()
 #set(LIBS ${LIBS} ${MYSQL_LIB} ${SQLITE_LIB} ${ORM_LIB} ${MGF_LIB})
 find_library(MGF_LIB mgf)
 find_library(SOCKET_LIB socket)
-find_library(MONITORING_LIB monitoring)
+find_library(MONITORING_LIB Monitoring)
 set(LIBS ${LIBS} ${MGF_LIB} ${SOCKET_LIB} ${MONITORING_LIB})
 
 set(WARNING "-Wall")

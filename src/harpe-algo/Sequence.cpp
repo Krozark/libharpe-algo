@@ -107,6 +107,30 @@ namespace harpe
         return stream;
     }
 
+    std::string Sequence::to_string()const
+    {
+        std::string res;
+        int size = sequence.size();
+
+        if(size>1)
+        {
+            const SequenceToken& v_i = *sequence[1]; //aa
+            res+=Context::aa_tab[v_i.aa_token.index].getSlug();
+        }
+
+        for(int i=3;i<size;i+=2)
+        {
+            const SequenceToken& v_i = *sequence[i];
+            res+="-"+Context::aa_tab[v_i.aa_token.index].getSlug();
+        }
+        return res;
+    }
+
+    const Sequence::Header& Sequence::getHeader()const
+    {
+        return header;
+    }
+
     void Sequence::initHeader(const mgf::Spectrum& spectrum)
     {
         for(unsigned int i=0;i<Stats::SIZE;++i)
