@@ -164,6 +164,9 @@ namespace harpe
 
         //std::cout<<"-- FINDS --"<<std::endl;
         //__print__(finds,std::cout);
+        Sequence empty;
+        empty.initHeader(spectrum);
+        finds.push_back(std::move(empty));
         return finds;
     }
 
