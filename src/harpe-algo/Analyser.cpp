@@ -8,9 +8,11 @@
 #include <harpe-algo/Context.hpp>
 #include <mgf/Analyse.hpp>
 
+#include <Monitoring/sys.hpp>
 #include <Monitoring/Physical.hpp>
 
 #define eq_error(value,to_find,error) (value >= (to_find - error) && value <= (to_find + error))
+#define MAX_MEM_32 1000000
 
 namespace harpe
 {
@@ -50,7 +52,8 @@ namespace harpe
         const unsigned int index_size=peaks_index.size();
         const std::vector<mgf::Peak*>& peaks = spectrum.getPeaks();
 
-        const double max_mem = (double)sys::memory::Physical::total() * 0.40; ///\todo TODO
+        const double tmp_max = (double)sys::memory::Physical::total() * 0.40; ///\todo TODO
+        const double max_mem = (sys::osBit()==32)?MIN(tmp_max,MAX_MEM_32):tmp_max;
 
         for(unsigned int index=0;index<index_size;++index)
         {
@@ -554,7 +557,8 @@ remove_1_peak_left:
         }
 
 
-        const double max_mem = (double)sys::memory::Physical::total() * 0.60; ///\todo TODO
+        const double tmp_max_mem = (double)sys::memory::Physical::total() * 0.60; ///\todo TODO
+        const double max_mem = (sys::osBit()==32)?MIN(tmp_max_mem,MAX_MEM_32):tmp_max_mem;
 
         bool ok= true;
 
