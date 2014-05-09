@@ -68,8 +68,10 @@ namespace harpe
             friend ntw::Serializer& operator<<(ntw::Serializer& stream,const AA& self);
 
 
+
         private:
             friend class SequenceToken;
+            friend class Sequence;
 
             int pk;///< the AA pk in bdd
             std::string slug; ///< the slug (unique)
@@ -77,6 +79,15 @@ namespace harpe
             
             int mod_pk;//< modification pk in bdd
             int position; ///< CHOICES = ((1,"partout"),(2,"N-term"),(3,"C-term")
+
+            /**
+             * \brief a enum for the position value
+             */
+            enum POSITION {
+                EVERY_WHERE = 1,
+                N_TER = 2,
+                C_TER = 3
+            };
     };
 }
 #endif

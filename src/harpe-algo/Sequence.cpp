@@ -126,6 +126,31 @@ namespace harpe
         return res;
     }
 
+    bool Sequence::isValid()const
+    {
+        const unsigned int size = sequence.size();
+        bool res = true;
+        if (size >= 1+2+2)//peak+(AA,peak)*2
+        {
+            //peak(,AA,peak)*
+            const AA& aa_firt = Context::aa_tab[sequence[1]->aa_token.index];
+            const AA& aa_last = Context::aa_tab[sequence[size-2]->aa_token.index];
+
+            //if [0] and [-1] == (N_TER or C_TER)
+            if(aa_firt.position == aa_last.position and (aa_firt.position != AA::POSITION::EVERY_WHERE))
+                res = false;
+            else
+            {
+                for(unsigned int i = 3; i<size-4 and res;i+=2)
+                {
+                    res = (Context::aa_tab[sequence[i]->aa_token.index].position == AA::POSITION::EVERY_WHERE);
+                }
+            }
+
+        }
+        return res;
+    }
+
     const Sequence::Header& Sequence::getHeader()const
     {
         return header;

@@ -11,7 +11,7 @@ namespace harpe
         slug(sl), 
         mass(mas),
         mod_pk(-1),
-        position(-1)
+        position(POSITION::EVERY_WHERE)
     {
     }
 

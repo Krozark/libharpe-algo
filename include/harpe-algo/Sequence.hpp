@@ -47,6 +47,14 @@ namespace harpe
              */
             std::string to_string()const;
 
+
+            /**
+             * \brief cheque if the AA in the sequence are valid
+             * (no N/C ter in wrong place)
+             * \todo TODO make it
+             */
+            bool isValid() const;
+
             /**
              * \brief Enum for stats of a Sequence
              */

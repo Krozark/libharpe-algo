@@ -585,30 +585,34 @@ remove_1_peak_left:
                         //ajout du noyeau (header-peak(en commun)-[AA -peak]* )
                         copy(ii.sequence.begin(),ii.sequence.end()-1,back_inserter(new_seq.sequence));
                         copy(jj.sequence.begin(),jj.sequence.end(),back_inserter(new_seq.sequence));
-                        //ajout du nouveau
-                        new_seq.initHeader(spectrum);
-
-                        ///////////////////////////////////////////
-
-                        if(_size < Context::finds_max_size or new_seq.header.score > finds[_size-1].header.score)
+                        //cheque if valid
+                        if(new_seq.isValid())
                         {
-                            finds.emplace_back(std::move(new_seq));
-                            ++_size;
+                            //ajout du nouveau
+                            new_seq.initHeader(spectrum);
 
-                            if(_size > Context::finds_max_size_tmp)
+                            ///////////////////////////////////////////
+
+                            if(_size < Context::finds_max_size or new_seq.header.score > finds[_size-1].header.score)
                             {
-                                const auto& _begin = finds.begin();
-                                std::partial_sort(_begin,_begin+Context::finds_max_size,finds.end(),f);
+                                finds.emplace_back(std::move(new_seq));
+                                ++_size;
 
-                                finds.resize(Context::finds_max_size);
-                                _size = Context::finds_max_size;
-                            }
+                                if(_size > Context::finds_max_size_tmp)
+                                {
+                                    const auto& _begin = finds.begin();
+                                    std::partial_sort(_begin,_begin+Context::finds_max_size,finds.end(),f);
 
-                            if (sys::memory::Physical::usedByProc() > max_mem)
-                            {
-                                HARPE_ALGO_WARNNIG("out of memory(merge)");
-                                status = Status::MemoryError;
-                                ok = false;
+                                    finds.resize(Context::finds_max_size);
+                                    _size = Context::finds_max_size;
+                                }
+
+                                if (sys::memory::Physical::usedByProc() > max_mem)
+                                {
+                                    HARPE_ALGO_WARNNIG("out of memory(merge)");
+                                    status = Status::MemoryError;
+                                    ok = false;
+                                }
                             }
                         }
                     }
