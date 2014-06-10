@@ -30,12 +30,12 @@ namespace harpe
             /**
              * \brief analyse all the MS/MS spectrum in the parsed input, and try to build the Sequence
              */
-            int analyse();
+            int analyse(std::vector<SequenceToken*>& tokens_ptr);
 
             /**
              * \brief analyse all the MS/MS spectrum in the parsed input, and try to build the Sequence
              */
-            static std::vector<harpe::Sequence> analyse(const mgf::Spectrum& s,int& status,int debut=-1);
+            static std::vector<harpe::Sequence> analyse(const mgf::Spectrum& s,std::vector<SequenceToken*>& tokens_ptr,int& status,int debut=-1);
 
             enum Status {
                 Unknow = 0, ///< unknow status
@@ -48,13 +48,12 @@ namespace harpe
             /**
              * \brief free all the alocated memory
              */
-            static void free();
+            static void free(std::vector<SequenceToken*>& tokens_ptr);
             
         private:
             typedef std::list<harpe::SequenceToken*> pile_tokens_ptr; ///< type of the stack
             enum Sens{LEFT=-1,STOP=0,RIGHT=1}; ///< type of the analyse direction
 
-            static std::vector<SequenceToken*> tokens_ptr;///< stocke les stack token pour les delete à la fin de l'analyse
 
             /**
              * \brief get a list of the most intens peaks
@@ -71,7 +70,7 @@ namespace harpe
              * \param inc direction to analyse
              * \return a vector of SequenceToken
              */
-            static std::vector<SequenceToken*> get_near(const std::vector<mgf::Peak*>& peak_list,const int index, const Sens inc);
+            static std::vector<SequenceToken*> get_near(const std::vector<mgf::Peak*>& peak_list,const int index, const Sens inc,std::vector<SequenceToken*>& tokens_ptr);
 
             /**
              * \brief pop one element of the stack using the direction

@@ -17,13 +17,11 @@
 namespace harpe
 {
 
-    std::vector<SequenceToken*> Analyser::tokens_ptr;
-
     Analyser::Analyser(std::istream& input) : driver(input)
     {
     }
 
-    int Analyser::analyse()
+    int Analyser::analyse(std::vector<SequenceToken*>& tokens_ptr)
     {
         int res = 0;
         mgf::Analyse ana = this->driver.parse(Context::max_charge);
@@ -33,7 +31,7 @@ namespace harpe
             int status;
             for (mgf::Spectrum* spectrum : spectrums)
             {
-                this->analyse(*spectrum,status);
+                this->analyse(*spectrum,tokens_ptr,status);
                 ++res;
             }
         }
@@ -42,7 +40,7 @@ namespace harpe
 
 
 
-    std::vector<harpe::Sequence> Analyser::analyse(const mgf::Spectrum& spectrum,int& status,int debut)
+    std::vector<harpe::Sequence> Analyser::analyse(const mgf::Spectrum& spectrum,std::vector<SequenceToken*>& tokens_ptr,int& status,int debut)
     {
         std::vector<Sequence> finds;// results
         status = Status::Ok;
@@ -75,7 +73,7 @@ namespace harpe
                 mgf::Peak* current_peak = peaks[current_peak_index];
                 current_peak->setUsed(true);
 
-                std::vector<SequenceToken*> _near=get_near(peaks,current_peak_index,sens);
+                std::vector<SequenceToken*> _near=get_near(peaks,current_peak_index,sens,tokens_ptr);
                 const int size_near = _near.size();
 
 
@@ -173,7 +171,7 @@ namespace harpe
         return finds;
     }
 
-    void Analyser::free()
+    void Analyser::free(std::vector<SequenceToken*>& tokens_ptr)
     {
         const unsigned int size = tokens_ptr.size();
         for(unsigned int i=0;i<size;++i)
@@ -236,7 +234,7 @@ namespace harpe
         return res;
     }
 
-    std::vector<SequenceToken*> Analyser::get_near(const std::vector<mgf::Peak*>& peak_list,const int index, const Sens sens)
+    std::vector<SequenceToken*> Analyser::get_near(const std::vector<mgf::Peak*>& peak_list,const int index, const Sens sens,std::vector<SequenceToken*>& tokens_ptr)
     {
         ///\todo
         std::vector<SequenceToken*> res;

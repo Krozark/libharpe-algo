@@ -56,10 +56,11 @@ int main(int argc,char* argv[])
         int status = 0;
         while((spectrum = driver.next()) != nullptr)
         {
+            std::vector<harpe::SequenceToken*> tokens_ptr;
             spectrum->__print__(std::cout);
-            std::vector<harpe::Sequence> res = harpe::Analyser::analyse(*spectrum,status,-1);
+            std::vector<harpe::Sequence> res = harpe::Analyser::analyse(*spectrum,tokens_ptr,status,-1);
             std::cout<<"status: "<<status<<std::endl;
-            harpe::Analyser::free();
+            harpe::Analyser::free(tokens_ptr);
             delete spectrum;
         }
         file.close();
