@@ -67,7 +67,7 @@ namespace harpe
                 PERCENT_COUVERTURE,///< MASS_TOTAL /100 * MASS_PARENT 
                 //PERCENT_COUVERTURE_AA,///< MASS_TOTAL / mass moyenne AA
                 NB_AA, ///< nombre de AA dans la chaine
-                NB_PEAKS, ///< nombre de peaks dasn la chaine
+                //NB_PEAKS, ///< nombre de peaks dasn la chaine
                 MASS_PARENT, ///< mass du peptide
                 PERCENT_INTENSITEE_UTILISEE,///< INTENSITEE_TOTAL /100 * INTENSITEE_TOTAL_PARENT  
                 SIZE ///< Nombre de valeurs

@@ -182,7 +182,7 @@ namespace harpe
             }
             if (ii.type == SequenceToken::Type::PEAK_TOKEN)
             {
-                ++header.stats[Stats::NB_PEAKS];
+                //++header.stats[Stats::NB_PEAKS];
                 mgf::Peak* p = ii.peak_token.pt_data;
                 header.stats[Stats::INTENSITEE_TOTAL] += p->getIntensity();
                 if ( spectrum.is_one_of_h2o(p))
