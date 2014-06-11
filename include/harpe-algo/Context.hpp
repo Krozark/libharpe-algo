@@ -50,6 +50,11 @@ namespace harpe
             static unsigned int finds_max_size; ///< the max number of Sequence to store [defined is 1000]
             static unsigned int finds_max_size_tmp; ///< the max number of Sequence to store during the algorithm (have to be greater tha finds_max_size [default is 5000])
 
+            enum class MOD {
+                NORMAL = 0, ///< default
+                LEARNING
+            } static mod;///< The running mod deffault is MOD::NORMAL
+
         private:
             typedef double (*calc_score_type)(const double* const values); ///< the type of the calc_score function
 

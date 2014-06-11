@@ -53,7 +53,7 @@ namespace harpe
         const double tmp_max = (double)sys::memory::Physical::total() * 0.40; ///\todo TODO
         const double max_mem = (sys::osBit()==32)?MIN(tmp_max,MAX_MEM_32):tmp_max;
 
-        for(unsigned int index=0;index<index_size;++index)
+        for(unsigned int index=0;index<index_size and status == Status::Ok ;++index)
         {
             register int current_peak_index = peaks_index[index];
 
@@ -154,13 +154,11 @@ namespace harpe
                 }
             }
 
-            /*
-            std::cout<<"-- RIGHT --"<<std::endl;
-            __print__(results_right,std::cout);
-            std::cout<<"-- LEFT --"<<std::endl;
-            __print__(results_left,std::cout);
-            */
-            merge_solution(finds,results_left,results_right,spectrum,status);
+            //do not merge if in Learning mod if the datas will be ignored
+            if(Context::mod == Context::MOD::LEARNING and ((results_left.size()+1)*(results_right.size()+1) > Context::finds_max_size))
+                status = Status::LearningTooMuchFindsError;
+            else
+                merge_solution(finds,results_left,results_right,spectrum,status);
         }
 
         //std::cout<<"-- FINDS --"<<std::endl;
@@ -510,7 +508,7 @@ remove_1_peak_left:
 
     void Analyser::merge_solution(std::vector<Sequence>& finds,const std::list<Sequence>& left_part,const std::list<Sequence>& right_part,const mgf::Spectrum& spectrum,int& status)
     {
-
+        
         auto l_end = left_part.end();
         auto r_end = right_part.end();
         auto l_begin = left_part.begin();
@@ -521,7 +519,7 @@ remove_1_peak_left:
         auto f = [](const Sequence& _1,const Sequence& _2){
             return _1.header.score>_2.header.score;
         };
-
+        
         for(auto i=l_begin; i != l_end; ++i)
         {
             ++_size;

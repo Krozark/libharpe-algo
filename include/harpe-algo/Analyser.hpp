@@ -34,14 +34,16 @@ namespace harpe
 
             /**
              * \brief analyse all the MS/MS spectrum in the parsed input, and try to build the Sequence
+             * If status == LearningTooMuchFindsError, the datas is not merged completly
              */
             static std::vector<harpe::Sequence> analyse(const mgf::Spectrum& s,std::vector<SequenceToken*>& tokens_ptr,int& status,int debut=-1);
 
             enum Status {
                 Unknow = 0, ///< unknow status
-                Ok = 1, ///< no problem [default]
-                Timeout =2, ///< more time is needed to finish
-                MemoryError = 3 //< Too much memory needed to finish the analyse
+                Ok, ///< no problem [default]
+                Timeout, ///< more time is needed to finish
+                MemoryError,//< Too much memory needed to finish the analyse
+                LearningTooMuchFindsError//< too much datas are finds (in learning mod only)
             };            
 
 

@@ -12,6 +12,7 @@ namespace harpe
     int Context::max_charge = 0;
     unsigned int Context::finds_max_size=1000;
     unsigned int Context::finds_max_size_tmp=1000*5;
+    Context::MOD Context::mod = Context::MOD::NORMAL;
     Context::Alias Context::alias;
 
     #ifdef _WIN32 //_WIN64
