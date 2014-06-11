@@ -3,4 +3,5 @@
 Add the enum harpe::Context::MOD
 Add the runnimg mod harpe::Context::mod
 Add Analyser::Status::LearningTooMuchFindsError
+Add Analyser::std::string strErr(int s)
 

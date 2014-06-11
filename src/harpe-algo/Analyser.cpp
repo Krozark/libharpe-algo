@@ -155,7 +155,7 @@ namespace harpe
             }
 
             //do not merge if in Learning mod if the datas will be ignored
-            if(Context::mod == Context::MOD::LEARNING and ((results_left.size()+1)*(results_right.size()+1) > Context::finds_max_size))
+            if(Context::mod == Context::MOD::LEARNING and (finds.size() + (results_left.size()+1)*(results_right.size()+1) > Context::finds_max_size))
                 status = Status::LearningTooMuchFindsError;
             else
                 merge_solution(finds,results_left,results_right,spectrum,status);
@@ -167,6 +167,26 @@ namespace harpe
         empty.initHeader(spectrum);
         finds.push_back(std::move(empty));
         return finds;
+    }
+
+    std::string Analyser::strErr(int s)
+    {
+        std::string res;
+        switch(s)
+        {
+            case Status::Ok:
+                res = Ok; break;
+            case Status::Timeout:
+                res="Timeout";break;
+            case Status::MemoryError:
+                res = "Memory Error";break;
+            case Status::LearningTooMuchFindsError:
+                res = "Learning Too Much Finds Error";break;
+            default:
+                res="Unknow";
+                break;
+        }
+        return res;
     }
 
     void Analyser::free(std::vector<SequenceToken*>& tokens_ptr)

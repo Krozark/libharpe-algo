@@ -46,6 +46,8 @@ namespace harpe
                 LearningTooMuchFindsError//< too much datas are finds (in learning mod only)
             };            
 
+            static std::string strErr(int s);///< return a message corresponding to Status code
+
 
             /**
              * \brief free all the alocated memory
