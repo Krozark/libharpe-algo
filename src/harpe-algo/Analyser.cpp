@@ -254,7 +254,6 @@ namespace harpe
 
     std::vector<SequenceToken*> Analyser::get_near(const std::vector<mgf::Peak*>& peak_list,const int index, const Sens sens,std::vector<SequenceToken*>& tokens_ptr)
     {
-        ///\todo
         std::vector<SequenceToken*> res;
 
         const unsigned int size_pep = peak_list.size();
