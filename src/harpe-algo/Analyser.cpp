@@ -50,7 +50,7 @@ namespace harpe
         const unsigned int index_size=peaks_index.size();
         const std::vector<mgf::Peak*>& peaks = spectrum.getPeaks();
 
-        const double tmp_max = (double)sys::memory::Physical::total() * 0.40; ///\todo TODO
+        const double tmp_max = (double)sys::memory::Physical::total() * (Context::mod == Context::MOD::LEARNING?0.60:0.40); ///more RAM for learning
         const double max_mem = (sys::osBit()==32)?MIN(tmp_max,MAX_MEM_32):tmp_max;
 
         for(unsigned int index=0;index<index_size and status == Status::Ok ;++index)
@@ -572,7 +572,7 @@ remove_1_peak_left:
         }
 
 
-        const double tmp_max_mem = (double)sys::memory::Physical::total() * 0.60; ///\todo TODO
+        const double tmp_max_mem = (double)sys::memory::Physical::total() * (Context::mod == Context::MOD::LEARNING?0.80:0.60); /// more RAM for LEARNING
         const double max_mem = (sys::osBit()==32)?MIN(tmp_max_mem,MAX_MEM_32):tmp_max_mem;
 
         bool ok= true;
