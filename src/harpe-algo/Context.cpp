@@ -76,6 +76,11 @@ namespace harpe
 
     double Context::calc_score(const double* const values)
     {
-        return (*alias.calc_score_func)(values);
+        return (*f())(values);
     };
+
+    Context::calc_score_type Context::f()
+    {
+        return alias.calc_score_func;
+    }
 }

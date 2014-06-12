@@ -55,8 +55,11 @@ namespace harpe
                 LEARNING
             } static mod;///< The running mod deffault is MOD::NORMAL
 
-        private:
             typedef double (*calc_score_type)(const double* const values); ///< the type of the calc_score function
+
+            static calc_score_type f();
+
+        private:
 
             /**
              * \brief A union to store the calc_score function whene load
