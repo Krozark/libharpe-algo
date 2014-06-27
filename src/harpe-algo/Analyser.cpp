@@ -57,6 +57,8 @@ namespace harpe
         {
             register int current_peak_index = peaks_index[index];
 
+            const unsigned int finds_size = finds.size();
+
             pile_tokens_ptr search;
             std::list<Sequence> results_right;
             std::list<Sequence> results_left;
@@ -145,7 +147,14 @@ namespace harpe
                         }break;
 
                     }
-                    if (sys::memory::Physical::usedByProc() > max_mem)
+
+                    if(Context::mod == Context::MOD::LEARNING and (finds_size + (results_left.size()+1)*(results_right.size()+1) > Context::finds_max_size))
+                    {
+                        //HARPE_ALGO_WARNNIG("Too much Finds (analyse)");
+                        status = Status::LearningTooMuchFindsError;
+                        sens = Sens::STOP;
+                    }
+                    else if (sys::memory::Physical::usedByProc() > max_mem)
                     {
                         HARPE_ALGO_WARNNIG("out of memory(analyse)");
                         status = Status::MemoryError;
@@ -155,7 +164,7 @@ namespace harpe
             }
 
             //do not merge if in Learning mod if the datas will be ignored
-            if(Context::mod == Context::MOD::LEARNING and (finds.size() + (results_left.size()+1)*(results_right.size()+1) > Context::finds_max_size))
+            if(Context::mod == Context::MOD::LEARNING and (finds_size + (results_left.size()+1)*(results_right.size()+1) > Context::finds_max_size))
                 status = Status::LearningTooMuchFindsError;
             else
                 merge_solution(finds,results_left,results_right,spectrum,status);
