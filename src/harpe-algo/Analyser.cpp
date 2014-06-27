@@ -163,15 +163,10 @@ namespace harpe
                 }
             }
 
-            //do not merge if in Learning mod if the datas will be ignored
-            if(Context::mod == Context::MOD::LEARNING and (finds_size + (results_left.size()+1)*(results_right.size()+1) > Context::finds_max_size))
-                status = Status::LearningTooMuchFindsError;
-            else
+            if(Context::mod == Context::MOD::NORMAL or (Context::mod == Context::MOD::LEARNING and status !=  Status::LearningTooMuchFindsError))
                 merge_solution(finds,results_left,results_right,spectrum,status);
         }
 
-        //std::cout<<"-- FINDS --"<<std::endl;
-        //__print__(finds,std::cout);
         Sequence empty;
         empty.initHeader(spectrum);
         finds.push_back(std::move(empty));
