@@ -26,7 +26,7 @@ namespace harpe
     {
         bool res = false;
         #ifdef _WIN32 //_WIN64
-        lib = LoadLibrary(libname.c_str());
+        lib = LoadLibrary((LPCTSTR)libname.c_str());
         if (lib == nullptr)
         {
             HARPE_ALGO_ERROR("Enable to load "<<libname);
