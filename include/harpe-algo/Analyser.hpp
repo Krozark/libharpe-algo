@@ -10,6 +10,8 @@
 #include <list>
 #include <vector>
 
+double get_max_mem(double coef);
+
 namespace harpe
 {
     /**
