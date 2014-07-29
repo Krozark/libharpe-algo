@@ -12,7 +12,20 @@
 #include <Monitoring/Physical.hpp>
 
 #define eq_error(value,to_find,error) (value >= (to_find - error) && value <= (to_find + error))
-#define MAX_MEM_32 1000000
+#define MAX_MEM_32 3624882688//< 3.5Go, 4Go = 4142723072
+
+double get_max_mem(double coef)
+{
+    if(harpe::Context::mod == harpe::Context::MOD::LEARNING)
+        coef += 0.2;
+
+    double res = sys::memory::Physical::total()*coef;
+    if(sys::osBit() == 32)
+    {
+        res = MIN(MAX_MEM_32,res);
+    }
+    return res;
+}
 
 namespace harpe
 {
@@ -50,8 +63,7 @@ namespace harpe
         const unsigned int index_size=peaks_index.size();
         const std::vector<mgf::Peak*>& peaks = spectrum.getPeaks();
 
-        const double tmp_max = (double)sys::memory::Physical::total() * (Context::mod == Context::MOD::LEARNING?0.60:0.40); ///more RAM for learning
-        const double max_mem = (sys::osBit()==32)?MIN(tmp_max,MAX_MEM_32):tmp_max;
+        const double max_mem = get_max_mem(0.40);
 
         for(unsigned int index=0;index<index_size and status == Status::Ok ;++index)
         {
@@ -575,9 +587,7 @@ remove_1_peak_left:
             }
         }
 
-
-        const double tmp_max_mem = (double)sys::memory::Physical::total() * (Context::mod == Context::MOD::LEARNING?0.80:0.60); /// more RAM for LEARNING
-        const double max_mem = (sys::osBit()==32)?MIN(tmp_max_mem,MAX_MEM_32):tmp_max_mem;
+        const double max_mem = get_max_mem(0.60);
 
         bool ok= true;
 
