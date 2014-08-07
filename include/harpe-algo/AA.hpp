@@ -67,6 +67,8 @@ namespace harpe
              */            
             friend ntw::Serializer& operator<<(ntw::Serializer& stream,const AA& self);
 
+            bool isMod()const{return mod_pk>0;}
+
 
 
         private:

@@ -233,8 +233,8 @@ namespace harpe
                                  return _1->getIntensity() > _2->getIntensity();//real both
                              return true;//_2 is artificial
                          }
-                             if (_2->getCharge()>0) //_1 is artificial
-                                 return false;//_1 < _2
+                         if (_2->getCharge()>0) //_1 is artificial
+                             return false;//_1 < _2
                          return false;//both are artificials
                          });
 

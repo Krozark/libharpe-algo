@@ -19,9 +19,13 @@ namespace harpe
         pk(p),
         slug(sl),
         mass(mas + delta),
-        mod_pk(mod_p),
-        position(pos)
+        mod_pk(mod_p)
     {
+        if(pos == POSITION::N_TER or pos == POSITION::C_TER)
+            position = pos;
+        else
+            position = POSITION::EVERY_WHERE;
+
     }
 
     bool AA::operator<(const AA& other)const

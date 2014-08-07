@@ -176,6 +176,7 @@ namespace harpe
             {
                 ++header.stats[Stats::NB_AA];
                 header.stats[Stats::MASS_TOTAL] += Context::aa_tab[ii.aa_token.index].getMass();
+                header.stats[Stats::NB_AA_MODS] += Context::aa_tab[ii.aa_token.index].isMod();
 
                 header.stats[Stats::ERROR_AA_CUMUL] += ABS(ii.aa_token.error);
                 header.stats[Stats::ERROR_TOTAL] += ii.aa_token.error;
@@ -185,8 +186,8 @@ namespace harpe
                 //++header.stats[Stats::NB_PEAKS];
                 mgf::Peak* p = ii.peak_token.pt_data;
                 header.stats[Stats::INTENSITEE_TOTAL] += p->getIntensity();
-                if ( spectrum.is_one_of_h2o(p))
-                    header.stats[Stats::MASS_TOTAL] += mgf::Convert::MH2O;
+                /*if ( spectrum.is_one_of_h2o(p))
+                    header.stats[Stats::MASS_TOTAL] += mgf::Convert::MH2O;*/
             }
             ++i;
         }
