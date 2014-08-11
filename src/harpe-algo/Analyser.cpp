@@ -615,7 +615,7 @@ remove_1_peak_left:
                         copy(ii.sequence.begin(),ii.sequence.end()-1,back_inserter(new_seq.sequence));
                         copy(jj.sequence.begin(),jj.sequence.end(),back_inserter(new_seq.sequence));
                         //cheque if valid
-                        if(new_seq.isValid())
+                        if(new_seq.isValid(spectrum))
                         {
                             //ajout du nouveau
                             new_seq.initHeader(spectrum);

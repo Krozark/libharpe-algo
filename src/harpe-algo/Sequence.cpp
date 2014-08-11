@@ -126,10 +126,10 @@ namespace harpe
         return res;
     }
 
-    bool Sequence::isValid()const
+    bool Sequence::isValid(const mgf::Spectrum& spectrum)const
     {
         const unsigned int size = sequence.size();
-        bool res = true;
+        /*bool res = true;
         if (size >= 1+2+2)//peak+(AA,peak)*2
         {
             //peak(,AA,peak)*
@@ -147,8 +147,44 @@ namespace harpe
                 }
             }
 
+        }*/
+        if(size >= 1+2)//1 AA
+        {
+            const AA& first_aa = Context::aa_tab[sequence[1]->aa_token.index];
+            const mgf::Peak* first_peak = sequence[0]->peak_token.pt_data; 
+            bool first_aa_term = false;
+
+            if(first_aa.position == AA::POSITION::N_TER or first_aa.position == AA::POSITION::C_TER)//first is tern
+            {
+                first_aa_term = true;
+                if(not spectrum.is_one_of_specials(first_peak)) //not good peak
+                    return false;
+            }
+
+            if (size >= 1+2+2)//2 AA
+            {
+                const AA& last_aa = Context::aa_tab[sequence[size-2]->aa_token.index];
+                const mgf::Peak* last_peak = sequence[size-1]->peak_token.pt_data;
+                bool last_aa_term = false;
+
+                if(last_aa.position == AA::POSITION::N_TER or last_aa.position == AA::POSITION::C_TER)//AA are C or N terminal only
+                {
+                    last_aa_term = true;
+                    if (not spectrum.is_one_of_specials(last_peak)) // not C on N ter peaks
+                        return false;
+                }
+
+                if(first_aa_term and last_aa_term and first_aa.position == last_aa.position)//all are C_ter or all N_ter
+                    return false;
+
+                for(unsigned int i = 3; i<size-4;i+=2)//others AA
+                {
+                    if(Context::aa_tab[sequence[i]->aa_token.index].position != AA::POSITION::EVERY_WHERE) //can't be terminal
+                        return false;
+                }
+            }
         }
-        return res;
+        return true;
     }
 
     const Sequence::Header& Sequence::getHeader()const

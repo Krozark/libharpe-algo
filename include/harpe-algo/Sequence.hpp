@@ -52,7 +52,7 @@ namespace harpe
              * \brief cheque if the AA in the sequence are valid
              * (no N/C ter in wrong place)
              */
-            bool isValid() const;
+            bool isValid(const mgf::Spectrum& Spectrum) const;
 
             /**
              * \brief Enum for stats of a Sequence
