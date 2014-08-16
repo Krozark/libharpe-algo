@@ -56,7 +56,8 @@ namespace harpe
 
             if(v_i.type == SequenceToken::AA_TOKEN)
             {
-                stream<<MGF_JAUNE<<"-"<<Context::aa_tab[v_i.aa_token.index].getSlug();
+                stream<<MGF_JAUNE<<"-";
+                Context::aa_tab[v_i.aa_token.index].__print__(stream);
             }
             else if (/*i < size-1 and */v_i.type == SequenceToken::PEAK_TOKEN)
                 stream<<MGF_VERT<<"-<"<<v_i.peak_token.pt_data->getMass()<<">";
@@ -151,8 +152,9 @@ namespace harpe
         if(size >= 1+2)//1 AA
         {
             const AA& first_aa = Context::aa_tab[sequence[1]->aa_token.index];
-            const mgf::Peak* first_peak = sequence[0]->peak_token.pt_data; 
+            const mgf::Peak* first_peak = sequence[0]->peak_token.pt_data;
             bool first_aa_term = false;
+            
 
             if(first_aa.position == AA::POSITION::N_TER or first_aa.position == AA::POSITION::C_TER)//first is tern
             {
@@ -167,6 +169,7 @@ namespace harpe
                 const mgf::Peak* last_peak = sequence[size-1]->peak_token.pt_data;
                 bool last_aa_term = false;
 
+
                 if(last_aa.position == AA::POSITION::N_TER or last_aa.position == AA::POSITION::C_TER)//AA are C or N terminal only
                 {
                     last_aa_term = true;
@@ -177,7 +180,7 @@ namespace harpe
                 if(first_aa_term and last_aa_term and first_aa.position == last_aa.position)//all are C_ter or all N_ter
                     return false;
 
-                for(unsigned int i = 3; i<size-4;i+=2)//others AA
+                for(unsigned int i = 3; i<=size-4;i+=2)//others AA
                 {
                     if(Context::aa_tab[sequence[i]->aa_token.index].position != AA::POSITION::EVERY_WHERE) //can't be terminal
                         return false;

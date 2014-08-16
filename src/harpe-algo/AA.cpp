@@ -41,10 +41,10 @@ namespace harpe
             switch(position)
             {
                 //case 1:break; //<partout
-                case 2:
+                case POSITION::N_TER:
                     stream<<"@N-term";
                     break;
-                case 3:
+                case POSITION::C_TER:
                     stream<<"@C-term";
                     break;
                 default:

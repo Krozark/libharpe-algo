@@ -465,7 +465,8 @@ remove_1_peak_left:
         }
         sequence.sequence.shrink_to_fit();
         //add the current
-        res.emplace_back(sequence);
+        if(sequence.isValid(spectrum))
+            res.emplace_back(sequence);
 
         //add all other possibilites tha can be (or not) complete
         const int size =sequence.sequence.size();
@@ -487,8 +488,8 @@ remove_1_peak_left:
                 sequence.sequence[size-2] = &tmp_i;
                 sequence.sequence[size-1] = tmp_i.aa_token.pt_data;
 
-
-                res.emplace_back(sequence);
+                if(sequence.isValid(spectrum))
+                    res.emplace_back(sequence);
             }
             --i;
         }
@@ -516,7 +517,8 @@ remove_1_peak_left:
         }
         sequence.sequence.shrink_to_fit();
         //add the current
-        res.emplace_back(sequence);
+        if(sequence.isValid(spectrum))
+            res.emplace_back(sequence);
 
         i = search.begin();//decrement
         ++i;//go to aa
@@ -535,7 +537,8 @@ remove_1_peak_left:
                 sequence.sequence[0] = tmp_i.aa_token.pt_data;
                 sequence.sequence[1] = &tmp_i;
 
-                res.emplace_back(sequence);
+                if(sequence.isValid(spectrum))
+                    res.emplace_back(sequence);
             }
             ++i;
         }
