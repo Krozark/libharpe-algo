@@ -215,7 +215,7 @@ namespace harpe
             {
                 ++header.stats[Stats::NB_AA];
                 header.stats[Stats::MASS_TOTAL] += Context::aa_tab[ii.aa_token.index].getMass();
-                header.stats[Stats::NB_AA_MODS] += Context::aa_tab[ii.aa_token.index].isMod();
+                //header.stats[Stats::NB_AA_MODS] += Context::aa_tab[ii.aa_token.index].isMod();
 
                 header.stats[Stats::ERROR_AA_CUMUL] += ABS(ii.aa_token.error);
                 header.stats[Stats::ERROR_TOTAL] += ii.aa_token.error;

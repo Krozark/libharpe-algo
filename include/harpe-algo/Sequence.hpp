@@ -69,7 +69,7 @@ namespace harpe
                 //NB_PEAKS, ///< nombre de peaks dasn la chaine
                 MASS_PARENT, ///< mass du peptide
                 PERCENT_INTENSITEE_UTILISEE,///< INTENSITEE_TOTAL /100 * INTENSITEE_TOTAL_PARENT  
-                NB_AA_MODS,//nombre de modifications
+                //NB_AA_MODS,//nombre de modifications
                 SIZE ///< Nombre de valeurs
             };            
 
